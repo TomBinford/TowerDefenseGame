@@ -10,33 +10,30 @@ namespace SpriteLibrary
 {
     public class Animation
     {
-        List<Sprite> frames;
-        int frame;
+        public List<Texture2D> frames;
+        public int frame;
 
         public Animation()
         {
-            frames = new List<Sprite>();
+            frames = new List<Texture2D>();
             frame = 0;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void AddFrame(Texture2D frame)
         {
-            frames[frame].Draw(spriteBatch);
+            frames.Add(frame);
         }
 
-        public void AddFrame(Sprite sprite)
+        public void RemoveFrame(Texture2D frame)
         {
-            frames.Add(sprite);
-        }
-
-        public void RemoveFrame(Sprite sprite)
-        {
-            frames.Remove(sprite);
+            frames.Remove(frame);
         }
 
         public void Advance()
         {
             frame = (frame + 1) % frames.Count;
         }
+
+        public Texture2D CurrentFrame => frames[frame];
     }
 }

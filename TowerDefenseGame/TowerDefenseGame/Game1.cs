@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpriteLibrary;
+using System;
 using System.Collections.Generic;
 
 namespace TowerDefenseGame
@@ -13,8 +14,17 @@ namespace TowerDefenseGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        
+        List<Balloon> balloons = new List<Balloon>();
 
-        Sprite testBalloon;
+        Animation pop;
+
+        MouseState currentMouse;
+        MouseState lastMouse;
+
+        Random random = new Random();
+
+        float balloonScale = 1f;
 
         public Game1()
         {
@@ -43,9 +53,12 @@ namespace TowerDefenseGame
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-
-            testBalloon = new Sprite(Content.Load<Texture2D>("WhiteBalloon"), new Vector2(0, 0), Color.Blue, 90, 1);
+            pop = new Animation();
+            pop.AddFrame(Content.Load<Texture2D>("WhiteBalloon"));
+            pop.AddFrame(Content.Load<Texture2D>("Pop1"));
+            pop.AddFrame(Content.Load<Texture2D>("Pop1"));
+            pop.AddFrame(Content.Load<Texture2D>("Pop1"));
+            pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             // TODO: use this.Content to load your game content here
         }
 
@@ -56,6 +69,33 @@ namespace TowerDefenseGame
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
+            currentMouse = Mouse.GetState();
+
+            if (currentMouse.LeftButton == ButtonState.Released && lastMouse.LeftButton == ButtonState.Pressed)
+            {
+                Balloon balloon = new Balloon(new Vector2(random.Next(0, GraphicsDevice.Viewport.Width), random.Next(0, GraphicsDevice.Viewport.Height)), Color.White, 0f, 1f, pop);
+                balloons.Add(balloon);
+            }
+
+            if (currentMouse.RightButton == ButtonState.Released && lastMouse.RightButton == ButtonState.Pressed && balloons.Count != 0)
+            {
+                balloons[balloons.Count - 1].Pop();
+            }
+
+            if (balloons.Count != 0)
+            {
+                for(int i = 0; i < balloons.Count; i++)
+                {
+                    Balloon balloon = balloons[i];
+                    if (balloon.popped)
+                    {
+                        balloons.Remove(balloon);
+                    }
+                    balloon.Update();
+                }
+            }
+
+            lastMouse = currentMouse;
             base.Update(gameTime);
         }
 
@@ -68,10 +108,14 @@ namespace TowerDefenseGame
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
             // TODO: Add your drawing code here
-
-            testBalloon.Draw(spriteBatch);
-
-            //spriteBatch.Draw(image, Vector2.Zero, frames[curr], Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
+            
+            if (balloons.Count != 0)
+            {
+                foreach (Balloon balloon in balloons)
+                {
+                    balloon.Draw(spriteBatch);
+                }
+            }
 
             spriteBatch.End();
             base.Draw(gameTime);
