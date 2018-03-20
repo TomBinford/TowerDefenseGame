@@ -15,10 +15,10 @@ namespace TowerDefenseGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-        List<Balloon> balloons = new List<Balloon>();
+        List<Balloon> balloons;
 
         Animation pop;
-
+        
         MouseState currentMouse;
         MouseState lastMouse;
 
@@ -59,6 +59,7 @@ namespace TowerDefenseGame
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
+            balloons = new List<Balloon>();
             // TODO: use this.Content to load your game content here
         }
 
@@ -73,7 +74,7 @@ namespace TowerDefenseGame
 
             if (currentMouse.LeftButton == ButtonState.Released && lastMouse.LeftButton == ButtonState.Pressed)
             {
-                Balloon balloon = new Balloon(new Vector2(random.Next(0, GraphicsDevice.Viewport.Width), random.Next(0, GraphicsDevice.Viewport.Height)), Color.White, 0f, 1f, pop);
+                Balloon balloon = new Balloon(new Vector2(random.Next(0, GraphicsDevice.Viewport.Width), random.Next(0, GraphicsDevice.Viewport.Height)), Color.White, 0f, balloonScale, pop);
                 balloons.Add(balloon);
             }
 

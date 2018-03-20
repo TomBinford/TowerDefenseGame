@@ -17,12 +17,15 @@ namespace TowerDefenseGame
 
         bool popStarted;
 
+        Directions LastDirection;
+
         public Balloon(Vector2 position, Color tint, float angle, float scale, Animation animation)
             : base(animation.frames[0], position, tint, angle, scale)
         {
             pop = animation;
             popped = false;
             popStarted = false;
+            LastDirection = Directions.None;
         }
 
         public void Update()
@@ -44,6 +47,11 @@ namespace TowerDefenseGame
             {
                 popped = true;
             }
+        }
+
+        public void Move(Texture2D map)
+        {
+
         }
     }
 }
