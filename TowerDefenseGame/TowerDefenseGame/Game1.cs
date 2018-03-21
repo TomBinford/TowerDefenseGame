@@ -7,9 +7,6 @@ using System.Collections.Generic;
 
 namespace TowerDefenseGame
 {
-    /// <summary>
-    /// This is the main type for your game.
-    /// </summary>
     public class Game1 : Game
     {
         GraphicsDeviceManager graphics;
@@ -22,36 +19,43 @@ namespace TowerDefenseGame
         MouseState currentMouse;
         MouseState lastMouse;
 
+        Texture2D m;
+
         Random random = new Random();
 
         float balloonScale = 1f;
+
+        Color[,] map;
+
+        Color[] balloonColors;
+
+        public Color[,] GetColors(Texture2D texture)
+        {
+            Color[] colors = new Color[texture.Height * texture.Width];
+            texture.GetData(colors);
+            Color[,] returnColors = new Color[texture.Width, texture.Height];
+            for (int x = 0; x < texture.Width; x++)
+            {
+                for (int y = 0; y < texture.Height; y++)
+                {
+                    returnColors[x, y] = colors[x + y * texture.Width];
+                }
+            }
+            return returnColors;
+        }
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
-
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             IsMouseVisible = true;
             base.Initialize();
         }
-
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             pop = new Animation();
             pop.AddFrame(Content.Load<Texture2D>("WhiteBalloon"));
@@ -60,27 +64,36 @@ namespace TowerDefenseGame
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             balloons = new List<Balloon>();
-            // TODO: use this.Content to load your game content here
+            m = Content.Load<Texture2D>("Map2");
+            map = new Color[m.Width, m.Height];
+            map = GetColors(m);
+            balloonColors = new Color[11];
+            balloonColors[(int)BalloonColors.Red] = new Color(255, 0, 0);
+            balloonColors[(int)BalloonColors.Blue] = new Color(0, 0, 255);
+            balloonColors[(int)BalloonColors.Green] = new Color(0, 255, 0);
+            balloonColors[(int)BalloonColors.Yellow] = new Color(255, 255, 0);
+            balloonColors[(int)BalloonColors.Pink] = new Color(100, 0, 0);
+            balloonColors[(int)BalloonColors.Black] = new Color(0, 0, 0);
+            balloonColors[(int)BalloonColors.White] = new Color(255, 255, 255);
+            balloonColors[(int)BalloonColors.Zebra] = new Color(100, 100, 100);
+            balloonColors[(int)BalloonColors.Lead] = new Color(50, 50, 50);
+            balloonColors[(int)BalloonColors.Rainbow] = new Color(255, 255, 255);
+            balloonColors[(int)BalloonColors.Ceramic] = new Color(120, 70, 50);
         }
-
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             currentMouse = Mouse.GetState();
 
             if (currentMouse.LeftButton == ButtonState.Released && lastMouse.LeftButton == ButtonState.Pressed)
             {
-                Balloon balloon = new Balloon(new Vector2(random.Next(0, GraphicsDevice.Viewport.Width), random.Next(0, GraphicsDevice.Viewport.Height)), Color.White, 0f, balloonScale, pop);
+                Balloon balloon = new Balloon(map, Color.White, 0f, balloonScale, pop, balloonColors, BalloonColors.Yellow);
                 balloons.Add(balloon);
+                balloons[balloons.Count - 1].Place(map);
             }
 
             if (currentMouse.RightButton == ButtonState.Released && lastMouse.RightButton == ButtonState.Pressed && balloons.Count != 0)
             {
-                balloons[balloons.Count - 1].Pop();
+                balloons[0].Pop();
             }
 
             if (balloons.Count != 0)
@@ -88,10 +101,11 @@ namespace TowerDefenseGame
                 for(int i = 0; i < balloons.Count; i++)
                 {
                     Balloon balloon = balloons[i];
-                    if (balloon.popped)
+                    if (balloon.popped || balloon.hasFinished)
                     {
                         balloons.Remove(balloon);
                     }
+                    balloon.Move(map);
                     balloon.Update();
                 }
             }
@@ -99,17 +113,12 @@ namespace TowerDefenseGame
             lastMouse = currentMouse;
             base.Update(gameTime);
         }
-
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            // TODO: Add your drawing code here
-            
+
+            spriteBatch.Draw(m, Vector2.Zero, Color.White);
             if (balloons.Count != 0)
             {
                 foreach (Balloon balloon in balloons)
@@ -117,7 +126,7 @@ namespace TowerDefenseGame
                     balloon.Draw(spriteBatch);
                 }
             }
-
+            
             spriteBatch.End();
             base.Draw(gameTime);
         }
