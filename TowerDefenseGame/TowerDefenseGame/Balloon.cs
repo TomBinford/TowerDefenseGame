@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
 using SpriteLibrary;
 
 namespace TowerDefenseGame
@@ -12,6 +13,8 @@ namespace TowerDefenseGame
     public class Balloon : Sprite
     {
         Animation pop;
+
+        Song popSound;
 
         public bool popped;
 
@@ -47,12 +50,17 @@ namespace TowerDefenseGame
         {
             if (popStarted && !popped)
             {
-                Pop();
+                Pop(popSound);
             }
         }
 
-        public void Pop()
+        public void Pop(Song popSound)
         {
+            this.popSound = popSound;
+            if (!popStarted)
+            {
+                MediaPlayer.Play(popSound);
+            }
             popStarted = true;
             ChangeTexture(pop.CurrentFrame);
             pop.Advance();

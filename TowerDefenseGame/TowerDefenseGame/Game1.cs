@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using SpriteLibrary;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,9 @@ namespace TowerDefenseGame
 {
     public class Game1 : Game
     {
+        Song song;
+        Song popSound;
+
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
@@ -57,6 +61,10 @@ namespace TowerDefenseGame
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            song = Content.Load<Song>("Background");
+            popSound = Content.Load<Song>("Pop");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(song);
             pop = new Animation();
             pop.AddFrame(Content.Load<Texture2D>("WhiteBalloon"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
@@ -86,14 +94,14 @@ namespace TowerDefenseGame
 
             if (currentMouse.LeftButton == ButtonState.Released && lastMouse.LeftButton == ButtonState.Pressed)
             {
-                Balloon balloon = new Balloon(map, Color.White, 0f, balloonScale, pop, balloonColors, BalloonColors.Yellow);
+                Balloon balloon = new Balloon(map, Color.White, 0f, balloonScale, pop, balloonColors, BalloonColors.Ceramic);
                 balloons.Add(balloon);
                 balloons[balloons.Count - 1].Place(map);
             }
 
             if (currentMouse.RightButton == ButtonState.Released && lastMouse.RightButton == ButtonState.Pressed && balloons.Count != 0)
             {
-                balloons[0].Pop();
+                balloons[0].Pop(popSound);
             }
 
             if (balloons.Count != 0)
