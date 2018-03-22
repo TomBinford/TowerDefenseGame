@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using SpriteLibrary;
@@ -14,7 +15,7 @@ namespace TowerDefenseGame
     {
         Animation pop;
 
-        Song popSound;
+        public SoundEffect popSound;
 
         public bool popped;
 
@@ -28,11 +29,15 @@ namespace TowerDefenseGame
         public bool isRegen;
         public BalloonColors color;
 
+        public Rectangle hitbox;
+        public float radius;
+
         Color[] colors;
 
-        public Balloon(Color[,] map, Color tint, float angle, float scale, Animation animation, Color[] colors, BalloonColors color, bool camo = false, bool regen = false)
+        public Balloon(Color[,] map, float angle, float scale, float radius, Animation animation, SoundEffect popSound, Color[] colors, BalloonColors color, bool camo = false, bool regen = false)
             : base(animation.frames[0], Vector2.Zero, colors[(int)color], angle, scale)
         {
+            hitbox = animation.frames[0].Bounds;
             position = Place(map);
             this.color = color;
             pop = animation;
@@ -44,22 +49,22 @@ namespace TowerDefenseGame
             isRegen = regen;
             this.colors = colors;
             tint = colors[(int)color];
+            this.popSound = popSound;
         }
 
         public void Update()
         {
             if (popStarted && !popped)
             {
-                Pop(popSound);
+                Pop();
             }
         }
 
-        public void Pop(Song popSound)
+        public void Pop()
         {
-            this.popSound = popSound;
             if (!popStarted)
             {
-                MediaPlayer.Play(popSound);
+                popSound.Play(1, 0.7f, 0);
             }
             popStarted = true;
             ChangeTexture(pop.CurrentFrame);
@@ -73,7 +78,10 @@ namespace TowerDefenseGame
                 }
                 else
                 {
-                    color--;
+                    if (color != BalloonColors.Invincible)
+                    {
+                        color--;
+                    }
                     tint = colors[(int)color];
                     popStarted = false;
                     ChangeTexture(pop.frames[0]);
@@ -95,13 +103,6 @@ namespace TowerDefenseGame
                 }
             }
             return Vector2.Zero;
-        }
-
-        public void ChangeTexture(Texture2D newTexture)
-        {
-            texture = newTexture;
-            source = texture.Bounds;
-            origin = new Vector2(texture.Width / 2, texture.Height / 2);
         }
 
         private bool ColorSurrounds(Color[,] map, Color search, bool move = false)
@@ -168,7 +169,7 @@ namespace TowerDefenseGame
             Color start = new Color(0, 255, 0);
             Color end = new Color(255, 0, 0);
             ColorSurrounds(map, new Color(0, 0, 0), true);
-            if (ColorSurrounds(map, new Color(255, 0, 0)))
+            if (ColorSurrounds(map, new Color(255, 0, 0), false))
             {
                 hasFinished = true;
             }

@@ -33,5 +33,12 @@ namespace SpriteLibrary
         {
             spriteBatch.Draw(texture, position, source, tint, MathHelper.ToRadians(angle), origin, scale, SpriteEffects.None, 0);
         }
+
+        public void ChangeTexture(Texture2D newTexture)
+        {
+            texture = newTexture;
+            source = texture.Bounds;
+            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+        }
     }
 }

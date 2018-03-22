@@ -33,7 +33,7 @@ namespace SpriteLibrary
         {
             frame = (frame + 1) % frames.Count;
         }
-
+        
         public Texture2D CurrentFrame => frames[frame];
     }
 }

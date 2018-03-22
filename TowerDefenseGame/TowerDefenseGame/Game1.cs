@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
@@ -11,7 +12,7 @@ namespace TowerDefenseGame
     public class Game1 : Game
     {
         Song song;
-        Song popSound;
+        SoundEffect popSound;
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
@@ -19,11 +20,17 @@ namespace TowerDefenseGame
         List<Balloon> balloons;
 
         Animation pop;
-        
+
+        Animation towerIdle;
+        Animation towerShoot;
+
         MouseState currentMouse;
         MouseState lastMouse;
 
         Texture2D m;
+        Texture2D range;
+
+        Tower tower;
 
         Random random = new Random();
 
@@ -62,20 +69,38 @@ namespace TowerDefenseGame
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
             song = Content.Load<Song>("Background");
-            popSound = Content.Load<Song>("Pop");
+            popSound = Content.Load<SoundEffect>("Pop");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(song);
+
             pop = new Animation();
             pop.AddFrame(Content.Load<Texture2D>("WhiteBalloon"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
             pop.AddFrame(Content.Load<Texture2D>("Pop1"));
+
             balloons = new List<Balloon>();
             m = Content.Load<Texture2D>("Map2");
             map = new Color[m.Width, m.Height];
             map = GetColors(m);
-            balloonColors = new Color[11];
+
+            towerIdle = new Animation();
+            towerIdle.AddFrame(Content.Load<Texture2D>("TestTower/IdleTower"));
+
+            towerShoot = new Animation();
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
+            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
+
+            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2), Color.White, 1f);
+            tower.radius = 250;
+            range = Content.Load<Texture2D>("TestTower/range");
+
+            balloonColors = new Color[12];
             balloonColors[(int)BalloonColors.Red] = new Color(255, 0, 0);
             balloonColors[(int)BalloonColors.Blue] = new Color(0, 0, 255);
             balloonColors[(int)BalloonColors.Green] = new Color(0, 255, 0);
@@ -87,6 +112,7 @@ namespace TowerDefenseGame
             balloonColors[(int)BalloonColors.Lead] = new Color(50, 50, 50);
             balloonColors[(int)BalloonColors.Rainbow] = new Color(255, 255, 255);
             balloonColors[(int)BalloonColors.Ceramic] = new Color(120, 70, 50);
+            balloonColors[(int)BalloonColors.Invincible] = new Color(0, 0, 0);
         }
         protected override void Update(GameTime gameTime)
         {
@@ -94,14 +120,14 @@ namespace TowerDefenseGame
 
             if (currentMouse.LeftButton == ButtonState.Released && lastMouse.LeftButton == ButtonState.Pressed)
             {
-                Balloon balloon = new Balloon(map, Color.White, 0f, balloonScale, pop, balloonColors, BalloonColors.Ceramic);
+                Balloon balloon = new Balloon(map, 0f, balloonScale, 5, pop, popSound, balloonColors, BalloonColors.Ceramic);
                 balloons.Add(balloon);
                 balloons[balloons.Count - 1].Place(map);
             }
 
             if (currentMouse.RightButton == ButtonState.Released && lastMouse.RightButton == ButtonState.Pressed && balloons.Count != 0)
             {
-                balloons[0].Pop(popSound);
+                balloons[0].Pop();
             }
 
             if (balloons.Count != 0)
@@ -116,7 +142,22 @@ namespace TowerDefenseGame
                     balloon.Move(map);
                     balloon.Update();
                 }
+                for (int i = 0; i < balloons.Count; i++)
+                {
+                    Balloon balloon = balloons[i];
+                    if (tower.InRange(balloon))
+                    {
+                        tower.Shoot(balloon);
+                        break;
+                    }
+                    else
+                    {
+                        balloon.popped = false;
+                    }
+                }
             }
+
+            tower.Update();
 
             lastMouse = currentMouse;
             base.Update(gameTime);
@@ -134,7 +175,8 @@ namespace TowerDefenseGame
                     balloon.Draw(spriteBatch);
                 }
             }
-            
+            tower.Draw(spriteBatch);
+
             spriteBatch.End();
             base.Draw(gameTime);
         }

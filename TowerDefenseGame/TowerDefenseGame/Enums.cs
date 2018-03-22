@@ -27,6 +27,13 @@ namespace TowerDefenseGame
         Zebra,
         Lead,
         Rainbow,
-        Ceramic
+        Ceramic,
+        Invincible
+    }
+
+    public enum AnimationState
+    {
+        Idle,
+        Shoot
     }
 }
