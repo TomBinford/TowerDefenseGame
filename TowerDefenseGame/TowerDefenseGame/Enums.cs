@@ -31,9 +31,18 @@ namespace TowerDefenseGame
         Invincible
     }
 
-    public enum AnimationState
+    public enum AnimationStates
     {
         Idle,
         Shoot
+    }
+
+    public enum TargetTypes
+    {
+        First,
+        Close,
+        Last,
+        Strong,
+        Weak
     }
 }

@@ -16,7 +16,7 @@ namespace TowerDefenseGame
 
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+
         List<Balloon> balloons;
 
         Animation pop;
@@ -96,9 +96,11 @@ namespace TowerDefenseGame
             towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
             towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
 
-            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2), Color.White, 1f);
+            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f);
             tower.radius = 250;
             range = Content.Load<Texture2D>("TestTower/range");
+            tower.maxShots = 1;
+            tower.targetType = TargetTypes.Strong;
 
             balloonColors = new Color[12];
             balloonColors[(int)BalloonColors.Red] = new Color(255, 0, 0);
@@ -132,28 +134,83 @@ namespace TowerDefenseGame
 
             if (balloons.Count != 0)
             {
-                for(int i = 0; i < balloons.Count; i++)
+                Balloon rem = null;
+                foreach (Balloon balloon in balloons)
                 {
-                    Balloon balloon = balloons[i];
                     if (balloon.popped || balloon.hasFinished)
                     {
-                        balloons.Remove(balloon);
+                        rem = balloon;
                     }
                     balloon.Move(map);
                     balloon.Update();
                 }
-                for (int i = 0; i < balloons.Count; i++)
+                if (rem != null)
                 {
-                    Balloon balloon = balloons[i];
+                    balloons.Remove(rem);
+                }
+                Balloon bestCandidate = null;
+                foreach (Balloon balloon in balloons)
+                {
                     if (tower.InRange(balloon))
                     {
-                        tower.Shoot(balloon);
-                        break;
+                        switch (tower.targetType)
+                        {
+                            case TargetTypes.First:
+                                if (bestCandidate == null)
+                                {
+                                    bestCandidate = balloon;
+                                }
+                                break;
+                            case TargetTypes.Last:
+                                bestCandidate = balloon;
+                                break;
+                            case TargetTypes.Close:
+                                if (bestCandidate != null)
+                                {
+                                    if (Vector2.Distance(tower.position, balloon.position) < Vector2.Distance(tower.position, bestCandidate.position))
+                                    {
+                                        bestCandidate = balloon;
+                                    }
+                                }
+                                else
+                                {
+                                    bestCandidate = balloon;
+                                }
+                                break;
+                            case TargetTypes.Weak:
+                                if ((int)balloon.color < (int)bestCandidate.color)
+                                {
+                                    bestCandidate = balloon;
+                                }
+                                break;
+                            case TargetTypes.Strong:
+                                if (bestCandidate != null)
+                                {
+                                    if ((int)balloon.color > (int)bestCandidate.color)
+                                    {
+                                        bestCandidate = balloon;
+                                    }
+                                }
+                                else
+                                {
+                                    bestCandidate = balloon;
+                                }
+                                break;
+                        }
                     }
-                    else
+                    if (balloon != bestCandidate)
                     {
-                        balloon.popped = false;
+                        balloon.texture = balloon.pop.frames[0];
+                        balloon.popStarted = false;
                     }
+                }
+                if (bestCandidate != null)
+                {
+                    tower.Shoot(bestCandidate);
+                }
+                else
+                {
+                    tower.state = AnimationStates.Idle;
                 }
             }
 

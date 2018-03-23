@@ -13,13 +13,13 @@ namespace TowerDefenseGame
 {
     public class Balloon : Sprite
     {
-        Animation pop;
+        public Animation pop;
 
         public SoundEffect popSound;
 
         public bool popped;
 
-        bool popStarted;
+        public bool popStarted;
 
         public bool hasFinished;
 
@@ -28,8 +28,6 @@ namespace TowerDefenseGame
         public bool isCamo;
         public bool isRegen;
         public BalloonColors color;
-
-        public Rectangle hitbox;
         public float radius;
 
         Color[] colors;
@@ -37,7 +35,6 @@ namespace TowerDefenseGame
         public Balloon(Color[,] map, float angle, float scale, float radius, Animation animation, SoundEffect popSound, Color[] colors, BalloonColors color, bool camo = false, bool regen = false)
             : base(animation.frames[0], Vector2.Zero, colors[(int)color], angle, scale)
         {
-            hitbox = animation.frames[0].Bounds;
             position = Place(map);
             this.color = color;
             pop = animation;
@@ -54,9 +51,16 @@ namespace TowerDefenseGame
 
         public void Update()
         {
-            if (popStarted && !popped)
+            if (!popped)
             {
-                Pop();
+                if (popStarted)
+                {
+                    Pop();
+                }
+            }
+            else
+            {
+                texture = pop.frames[0];
             }
         }
 
@@ -67,7 +71,7 @@ namespace TowerDefenseGame
                 popSound.Play(1, 0.7f, 0);
             }
             popStarted = true;
-            ChangeTexture(pop.CurrentFrame);
+            texture = pop.CurrentFrame;
             pop.Advance();
             tint = Color.White;
             if (pop.frame == 0)
@@ -84,7 +88,7 @@ namespace TowerDefenseGame
                     }
                     tint = colors[(int)color];
                     popStarted = false;
-                    ChangeTexture(pop.frames[0]);
+                    texture = pop.frames[0];
                 }
             }
         }
@@ -165,9 +169,6 @@ namespace TowerDefenseGame
                 return;
             }
             Color currentColor = map[(int)position.X, (int)position.Y];
-            Color black = new Color(0, 0, 0);
-            Color start = new Color(0, 255, 0);
-            Color end = new Color(255, 0, 0);
             ColorSurrounds(map, new Color(0, 0, 0), true);
             if (ColorSurrounds(map, new Color(255, 0, 0), false))
             {

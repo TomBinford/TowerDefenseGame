@@ -11,7 +11,22 @@ namespace SpriteLibrary
     public class Sprite
     {
         public Vector2 position;
-        public Texture2D texture;
+
+        private Texture2D Texture;
+        public Texture2D texture
+        {
+            get
+            {
+                return Texture;
+            }
+            set
+            {
+                Texture = value;
+                source = Texture.Bounds;
+                origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+            }
+        }
+
         public Color tint;
         public float angle;
         public float scale;
@@ -31,14 +46,7 @@ namespace SpriteLibrary
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, source, tint, MathHelper.ToRadians(angle), origin, scale, SpriteEffects.None, 0);
-        }
-
-        public void ChangeTexture(Texture2D newTexture)
-        {
-            texture = newTexture;
-            source = texture.Bounds;
-            origin = new Vector2(texture.Width / 2, texture.Height / 2);
+            spriteBatch.Draw(texture, position, null, tint, MathHelper.ToRadians(angle), origin, scale, SpriteEffects.None, 0);
         }
     }
 }
