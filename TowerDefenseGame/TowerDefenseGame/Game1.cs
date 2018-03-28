@@ -18,6 +18,7 @@ namespace TowerDefenseGame
         SpriteBatch spriteBatch;
 
         List<Balloon> balloons;
+        List<Projectile> projectiles;
 
         Animation pop;
 
@@ -38,7 +39,7 @@ namespace TowerDefenseGame
 
         Color[,] map;
 
-        Color[] balloonColors;
+        Dictionary<BalloonColors, Color> balloonColors;
 
         public Color[,] GetColors(Texture2D texture)
         {
@@ -96,25 +97,25 @@ namespace TowerDefenseGame
             towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
             towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
 
-            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f);
+            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f, Content.Load<Texture2D>("Dart"));
             tower.radius = 250;
             range = Content.Load<Texture2D>("TestTower/range");
-            tower.maxShots = 1;
-            tower.targetType = TargetTypes.Strong;
+            tower.oneShot = true;
+            tower.targetType = TargetTypes.Last;
 
-            balloonColors = new Color[12];
-            balloonColors[(int)BalloonColors.Red] = new Color(255, 0, 0);
-            balloonColors[(int)BalloonColors.Blue] = new Color(0, 0, 255);
-            balloonColors[(int)BalloonColors.Green] = new Color(0, 255, 0);
-            balloonColors[(int)BalloonColors.Yellow] = new Color(255, 255, 0);
-            balloonColors[(int)BalloonColors.Pink] = new Color(100, 0, 0);
-            balloonColors[(int)BalloonColors.Black] = new Color(0, 0, 0);
-            balloonColors[(int)BalloonColors.White] = new Color(255, 255, 255);
-            balloonColors[(int)BalloonColors.Zebra] = new Color(100, 100, 100);
-            balloonColors[(int)BalloonColors.Lead] = new Color(50, 50, 50);
-            balloonColors[(int)BalloonColors.Rainbow] = new Color(255, 255, 255);
-            balloonColors[(int)BalloonColors.Ceramic] = new Color(120, 70, 50);
-            balloonColors[(int)BalloonColors.Invincible] = new Color(0, 0, 0);
+            balloonColors = new Dictionary<BalloonColors, Color>();
+            balloonColors.Add(BalloonColors.Red, new Color(255, 0, 0));
+            balloonColors.Add(BalloonColors.Blue, new Color(0, 0, 255));
+            balloonColors.Add(BalloonColors.Green, new Color(0, 255, 0));
+            balloonColors.Add(BalloonColors.Yellow, new Color(255, 255, 0));
+            balloonColors.Add(BalloonColors.Pink, new Color(100, 0, 0));
+            balloonColors.Add(BalloonColors.Black, new Color(0, 0, 0));
+            balloonColors.Add(BalloonColors.White, new Color(255, 255, 255));
+            balloonColors.Add(BalloonColors.Zebra, new Color(100, 100, 100));
+            balloonColors.Add(BalloonColors.Lead, new Color(50, 50, 50));
+            balloonColors.Add(BalloonColors.Rainbow, new Color(255, 255, 255));
+            balloonColors.Add(BalloonColors.Ceramic, new Color(120, 70, 50));
+            balloonColors.Add(BalloonColors.Invincible, new Color(0, 0, 0));
         }
         protected override void Update(GameTime gameTime)
         {
@@ -134,19 +135,22 @@ namespace TowerDefenseGame
 
             if (balloons.Count != 0)
             {
-                Balloon rem = null;
+                List<Balloon> rem = new List<Balloon>();
                 foreach (Balloon balloon in balloons)
                 {
                     if (balloon.popped || balloon.hasFinished)
                     {
-                        rem = balloon;
+                        rem.Add(balloon);
                     }
                     balloon.Move(map);
                     balloon.Update();
                 }
-                if (rem != null)
+                if (rem.Count != 0)
                 {
-                    balloons.Remove(rem);
+                    foreach (Balloon balloon in rem)
+                    {
+                        balloons.Remove(balloon);
+                    }
                 }
                 Balloon bestCandidate = null;
                 foreach (Balloon balloon in balloons)
@@ -156,19 +160,42 @@ namespace TowerDefenseGame
                         switch (tower.targetType)
                         {
                             case TargetTypes.First:
-                                if (bestCandidate == null)
+                                if (bestCandidate != null)
+                                {
+                                    if (balloon.movesMade > bestCandidate.movesMade)
+                                    {
+                                        bestCandidate.popStarted = false;
+                                        bestCandidate.texture = bestCandidate.pop.frames[0];
+                                        bestCandidate = balloon;
+                                    }
+                                }
+                                else
                                 {
                                     bestCandidate = balloon;
                                 }
                                 break;
                             case TargetTypes.Last:
-                                bestCandidate = balloon;
+                                if (bestCandidate != null)
+                                {
+                                    if (balloon.movesMade < bestCandidate.movesMade)
+                                    {
+                                        bestCandidate.popStarted = false;
+                                        bestCandidate.texture = bestCandidate.pop.frames[0];
+                                        bestCandidate = balloon;
+                                    }
+                                }
+                                else
+                                {
+                                    bestCandidate = balloon;
+                                }
                                 break;
                             case TargetTypes.Close:
                                 if (bestCandidate != null)
                                 {
                                     if (Vector2.Distance(tower.position, balloon.position) < Vector2.Distance(tower.position, bestCandidate.position))
                                     {
+                                        bestCandidate.popStarted = false;
+                                        bestCandidate.texture = bestCandidate.pop.frames[0];
                                         bestCandidate = balloon;
                                     }
                                 }
@@ -188,6 +215,8 @@ namespace TowerDefenseGame
                                 {
                                     if ((int)balloon.color > (int)bestCandidate.color)
                                     {
+                                        bestCandidate.popStarted = false;
+                                        bestCandidate.texture = bestCandidate.pop.frames[0];
                                         bestCandidate = balloon;
                                     }
                                 }

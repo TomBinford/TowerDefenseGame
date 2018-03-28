@@ -25,15 +25,17 @@ namespace TowerDefenseGame
 
         Directions lastDirection;
 
+        public int movesMade;
+
         public bool isCamo;
         public bool isRegen;
         public BalloonColors color;
         public float radius;
 
-        Color[] colors;
+        Dictionary<BalloonColors, Color> colors;
 
-        public Balloon(Color[,] map, float angle, float scale, float radius, Animation animation, SoundEffect popSound, Color[] colors, BalloonColors color, bool camo = false, bool regen = false)
-            : base(animation.frames[0], Vector2.Zero, colors[(int)color], angle, scale)
+        public Balloon(Color[,] map, float angle, float scale, float radius, Animation animation, SoundEffect popSound, Dictionary<BalloonColors, Color> colors, BalloonColors color, bool camo = false, bool regen = false)
+            : base(animation.frames[0], Vector2.Zero, colors[color], angle, scale)
         {
             position = Place(map);
             this.color = color;
@@ -45,8 +47,9 @@ namespace TowerDefenseGame
             isCamo = camo;
             isRegen = regen;
             this.colors = colors;
-            tint = colors[(int)color];
+            tint = colors[color];
             this.popSound = popSound;
+            movesMade = 0;
         }
 
         public void Update()
@@ -86,7 +89,7 @@ namespace TowerDefenseGame
                     {
                         color--;
                     }
-                    tint = colors[(int)color];
+                    tint = colors[color];
                     popStarted = false;
                     texture = pop.frames[0];
                 }
@@ -170,6 +173,7 @@ namespace TowerDefenseGame
             }
             Color currentColor = map[(int)position.X, (int)position.Y];
             ColorSurrounds(map, new Color(0, 0, 0), true);
+            movesMade++;
             if (ColorSurrounds(map, new Color(255, 0, 0), false))
             {
                 hasFinished = true;
