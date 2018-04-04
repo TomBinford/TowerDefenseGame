@@ -42,7 +42,6 @@ namespace TowerDefenseGame
         First,
         Close,
         Last,
-        Strong,
-        Weak
+        Strong
     }
 }

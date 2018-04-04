@@ -13,85 +13,85 @@ namespace TowerDefenseGame
 {
     public class Balloon : Sprite
     {
-        public Animation pop;
+        public Animation PopAnimation;
 
-        public SoundEffect popSound;
+        private SoundEffect popSound;
 
-        public bool popped;
+        public bool Popped;
 
-        public bool popStarted;
+        public bool PopStarted;
 
-        public bool hasFinished;
+        public bool HasFinished;
 
-        Directions lastDirection;
+        private Directions lastDirection;
 
-        public int movesMade;
+        public int MovesMade;
 
-        public bool isCamo;
-        public bool isRegen;
-        public BalloonColors color;
-        public float radius;
+        public bool IsCamo;
+        public bool IsRegen;
+        public BalloonColors BalloonColor;
+        public float Radius;
 
         Dictionary<BalloonColors, Color> colors;
 
-        public Balloon(Color[,] map, float angle, float scale, float radius, Animation animation, SoundEffect popSound, Dictionary<BalloonColors, Color> colors, BalloonColors color, bool camo = false, bool regen = false)
-            : base(animation.frames[0], Vector2.Zero, colors[color], angle, scale)
+        public Balloon(Color[,] map, float angle, float scale, float Radius, Animation animation, SoundEffect popSound, Dictionary<BalloonColors, Color> colors, BalloonColors BalloonColor, bool camo = false, bool regen = false)
+            : base(animation.Frames[0], Vector2.Zero, colors[BalloonColor], angle, scale)
         {
             position = Place(map);
-            this.color = color;
-            pop = animation;
-            popped = false;
-            popStarted = false;
-            hasFinished = false;
+            this.BalloonColor = BalloonColor;
+            PopAnimation = animation;
+            Popped = false;
+            PopStarted = false;
+            HasFinished = false;
             lastDirection = Directions.None;
-            isCamo = camo;
-            isRegen = regen;
+            IsCamo = camo;
+            IsRegen = regen;
             this.colors = colors;
-            tint = colors[color];
+            tint = colors[BalloonColor];
             this.popSound = popSound;
-            movesMade = 0;
+            MovesMade = 0;
         }
 
         public void Update()
         {
-            if (!popped)
+            if (!Popped)
             {
-                if (popStarted)
+                if (PopStarted)
                 {
                     Pop();
                 }
             }
             else
             {
-                texture = pop.frames[0];
+                texture = PopAnimation.Frames[0];
             }
         }
 
         public void Pop()
         {
-            if (!popStarted)
+            if (!PopStarted)
             {
                 popSound.Play(1, 0.7f, 0);
             }
-            popStarted = true;
-            texture = pop.CurrentFrame;
-            pop.Advance();
+            PopStarted = true;
+            texture = PopAnimation.CurrentFrame;
+            PopAnimation.Advance();
             tint = Color.White;
-            if (pop.frame == 0)
+            if (PopAnimation.Frame == 0)
             {
-                if (color == BalloonColors.Red)
+                if (BalloonColor == BalloonColors.Red)
                 {
-                    popped = true;
+                    Popped = true;
                 }
                 else
                 {
-                    if (color != BalloonColors.Invincible)
+                    if (BalloonColor != BalloonColors.Invincible)
                     {
-                        color--;
+                        BalloonColor--;
                     }
-                    tint = colors[color];
-                    popStarted = false;
-                    texture = pop.frames[0];
+                    tint = colors[BalloonColor];
+                    PopStarted = false;
+                    texture = PopAnimation.Frames[0];
                 }
             }
         }
@@ -167,16 +167,16 @@ namespace TowerDefenseGame
 
         public void Move(Color[,] map)
         {
-            if (hasFinished)
+            if (HasFinished)
             {
                 return;
             }
             Color currentColor = map[(int)position.X, (int)position.Y];
             ColorSurrounds(map, new Color(0, 0, 0), true);
-            movesMade++;
+            MovesMade++;
             if (ColorSurrounds(map, new Color(255, 0, 0), false))
             {
-                hasFinished = true;
+                HasFinished = true;
             }
         }
     }

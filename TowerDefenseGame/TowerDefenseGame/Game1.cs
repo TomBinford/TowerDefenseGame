@@ -18,7 +18,6 @@ namespace TowerDefenseGame
         SpriteBatch spriteBatch;
 
         List<Balloon> balloons;
-        List<Projectile> projectiles;
 
         Animation pop;
 
@@ -29,10 +28,9 @@ namespace TowerDefenseGame
         MouseState lastMouse;
 
         Texture2D m;
-        Texture2D range;
 
-        Tower tower;
-
+        List<Tower> towers;
+        
         Random random = new Random();
 
         float balloonScale = 1f;
@@ -90,18 +88,19 @@ namespace TowerDefenseGame
             towerIdle.AddFrame(Content.Load<Texture2D>("TestTower/IdleTower"));
 
             towerShoot = new Animation();
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower1"));
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
-            towerShoot.AddFrame(Content.Load<Texture2D>("TestTower/AttackTower2"));
 
-            tower = new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f, Content.Load<Texture2D>("Dart"));
-            tower.radius = 250;
-            range = Content.Load<Texture2D>("TestTower/range");
-            tower.oneShot = true;
-            tower.targetType = TargetTypes.Last;
+            Texture2D first = Content.Load<Texture2D>("TestTower/AttackTower1");
+            Texture2D second = Content.Load<Texture2D>("TestTower/AttackTower2");
+
+            towerShoot.AddFrame(first);
+            towerShoot.AddFrame(first);
+            towerShoot.AddFrame(first);
+            towerShoot.AddFrame(second);
+            towerShoot.AddFrame(second);
+            towerShoot.AddFrame(second);
+
+            towers = new List<Tower>();
+            towers.Add(new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f, Content.Load<Texture2D>("Dart"), 100, 500, true, TargetTypes.First));
 
             balloonColors = new Dictionary<BalloonColors, Color>();
             balloonColors.Add(BalloonColors.Red, new Color(255, 0, 0));
@@ -128,17 +127,12 @@ namespace TowerDefenseGame
                 balloons[balloons.Count - 1].Place(map);
             }
 
-            if (currentMouse.RightButton == ButtonState.Released && lastMouse.RightButton == ButtonState.Pressed && balloons.Count != 0)
-            {
-                balloons[0].Pop();
-            }
-
             if (balloons.Count != 0)
             {
                 List<Balloon> rem = new List<Balloon>();
                 foreach (Balloon balloon in balloons)
                 {
-                    if (balloon.popped || balloon.hasFinished)
+                    if (balloon.Popped || balloon.HasFinished)
                     {
                         rem.Add(balloon);
                     }
@@ -153,98 +147,21 @@ namespace TowerDefenseGame
                     }
                 }
                 Balloon bestCandidate = null;
-                foreach (Balloon balloon in balloons)
+
+                foreach (Tower tower in towers)
                 {
-                    if (tower.InRange(balloon))
+                    bestCandidate = tower.BestShot(balloons);
+                    if (bestCandidate != null)
                     {
-                        switch (tower.targetType)
-                        {
-                            case TargetTypes.First:
-                                if (bestCandidate != null)
-                                {
-                                    if (balloon.movesMade > bestCandidate.movesMade)
-                                    {
-                                        bestCandidate.popStarted = false;
-                                        bestCandidate.texture = bestCandidate.pop.frames[0];
-                                        bestCandidate = balloon;
-                                    }
-                                }
-                                else
-                                {
-                                    bestCandidate = balloon;
-                                }
-                                break;
-                            case TargetTypes.Last:
-                                if (bestCandidate != null)
-                                {
-                                    if (balloon.movesMade < bestCandidate.movesMade)
-                                    {
-                                        bestCandidate.popStarted = false;
-                                        bestCandidate.texture = bestCandidate.pop.frames[0];
-                                        bestCandidate = balloon;
-                                    }
-                                }
-                                else
-                                {
-                                    bestCandidate = balloon;
-                                }
-                                break;
-                            case TargetTypes.Close:
-                                if (bestCandidate != null)
-                                {
-                                    if (Vector2.Distance(tower.position, balloon.position) < Vector2.Distance(tower.position, bestCandidate.position))
-                                    {
-                                        bestCandidate.popStarted = false;
-                                        bestCandidate.texture = bestCandidate.pop.frames[0];
-                                        bestCandidate = balloon;
-                                    }
-                                }
-                                else
-                                {
-                                    bestCandidate = balloon;
-                                }
-                                break;
-                            case TargetTypes.Weak:
-                                if ((int)balloon.color < (int)bestCandidate.color)
-                                {
-                                    bestCandidate = balloon;
-                                }
-                                break;
-                            case TargetTypes.Strong:
-                                if (bestCandidate != null)
-                                {
-                                    if ((int)balloon.color > (int)bestCandidate.color)
-                                    {
-                                        bestCandidate.popStarted = false;
-                                        bestCandidate.texture = bestCandidate.pop.frames[0];
-                                        bestCandidate = balloon;
-                                    }
-                                }
-                                else
-                                {
-                                    bestCandidate = balloon;
-                                }
-                                break;
-                        }
+                        tower.Shoot(tower.BestShot(balloons));
                     }
-                    if (balloon != bestCandidate)
+                    else
                     {
-                        balloon.texture = balloon.pop.frames[0];
-                        balloon.popStarted = false;
+                        tower.State = AnimationStates.Idle;
                     }
-                }
-                if (bestCandidate != null)
-                {
-                    tower.Shoot(bestCandidate);
-                }
-                else
-                {
-                    tower.state = AnimationStates.Idle;
+                    tower.Update();
                 }
             }
-
-            tower.Update();
-
             lastMouse = currentMouse;
             base.Update(gameTime);
         }
@@ -261,8 +178,14 @@ namespace TowerDefenseGame
                     balloon.Draw(spriteBatch);
                 }
             }
-            tower.Draw(spriteBatch);
-
+            foreach (Tower tower in towers)
+            {
+                tower.Draw(spriteBatch);
+            }
+            foreach (Tower tower in towers)
+            {
+                tower.DrawProjectiles(spriteBatch);
+            }
             spriteBatch.End();
             base.Draw(gameTime);
         }

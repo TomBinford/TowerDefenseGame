@@ -11,13 +11,13 @@ namespace TowerDefenseGame
 {
     public class Projectile : Sprite
     {
-        public float radius;
+        public float Radius;
 
-        int maxHits;
-        float speed;
-        
-        public Projectile(Texture2D texture, Vector2 position, Color tint, float speed, int maxHits)
-            : base(texture, position, tint, 0, 1)
+        public int maxHits;
+        private float speed;
+
+        public Projectile(Texture2D texture, Vector2 position, Color tint, float speed, int maxHits, float angle)
+            : base(texture, position, tint, angle, 1)
         {
             this.maxHits = maxHits;
             this.speed = speed;
@@ -31,7 +31,7 @@ namespace TowerDefenseGame
 
         public bool IntersectsWith(Balloon balloon)
         {
-            return Vector2.Distance(balloon.position, position) - radius - balloon.radius < 0;
+            return Vector2.Distance(balloon.position, position) - Radius - balloon.Radius < 0;
         }
     }
 }
