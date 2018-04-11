@@ -11,7 +11,7 @@ namespace TowerDefenseGame
 {
     public class Tower : Sprite
     {
-        private List<Projectile> projectiles;
+        public List<Projectile> projectiles;
         private Texture2D nonMovingSprite;
         private bool spriteAssigned = false;
 
@@ -66,9 +66,9 @@ namespace TowerDefenseGame
             ShootDelay = 60;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
-            texture = Animations[State].CurrentFrame;
+            Texture = Animations[State].CurrentFrame;
             Animations[State].Advance();
             base.Draw(spriteBatch);
             if (spriteAssigned)
@@ -122,7 +122,7 @@ namespace TowerDefenseGame
             Vector2 angleVector = Vector2.Subtract(position, target.position);
             angle = MathHelper.ToDegrees((float)Math.Atan2(-1 * angleVector.X, angleVector.Y));
             State = AnimationStates.Shoot;
-            projectiles.Add(new Projectile(Projectile, position, Color.White, 1, 1, angle - 90));
+            projectiles.Add(new Projectile(Projectile, position, Color.White, 5, 1, angle - 90));
         }
 
         public Balloon BestShot(List<Balloon> balloons)
@@ -142,7 +142,7 @@ namespace TowerDefenseGame
                             if (balloon.MovesMade > bestCandidate.MovesMade)
                             {
                                 bestCandidate.PopStarted = false;
-                                bestCandidate.texture = bestCandidate.PopAnimation.Frames[0];
+                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
                                 bestCandidate = balloon;
                             }
                         }
@@ -157,7 +157,7 @@ namespace TowerDefenseGame
                             if (balloon.MovesMade < bestCandidate.MovesMade)
                             {
                                 bestCandidate.PopStarted = false;
-                                bestCandidate.texture = bestCandidate.PopAnimation.Frames[0];
+                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
                                 bestCandidate = balloon;
                             }
                         }
@@ -172,7 +172,7 @@ namespace TowerDefenseGame
                             if (Vector2.Distance(position, balloon.position) < Vector2.Distance(position, bestCandidate.position))
                             {
                                 bestCandidate.PopStarted = false;
-                                bestCandidate.texture = bestCandidate.PopAnimation.Frames[0];
+                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
                                 bestCandidate = balloon;
                             }
                         }
@@ -187,7 +187,7 @@ namespace TowerDefenseGame
                             if ((int)balloon.BalloonColor > (int)bestCandidate.BalloonColor)
                             {
                                 bestCandidate.PopStarted = false;
-                                bestCandidate.texture = bestCandidate.PopAnimation.Frames[0];
+                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
                                 bestCandidate = balloon;
                             }
                         }
@@ -199,7 +199,7 @@ namespace TowerDefenseGame
                 }
                 if (balloon != bestCandidate)
                 {
-                    balloon.texture = balloon.PopAnimation.Frames[0];
+                    balloon.Texture = balloon.PopAnimation.Frames[0];
                     balloon.PopStarted = false;
                 }
             }

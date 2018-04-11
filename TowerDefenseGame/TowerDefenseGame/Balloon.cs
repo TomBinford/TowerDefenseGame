@@ -63,7 +63,7 @@ namespace TowerDefenseGame
             }
             else
             {
-                texture = PopAnimation.Frames[0];
+                Texture = PopAnimation.Frames[0];
             }
         }
 
@@ -74,7 +74,7 @@ namespace TowerDefenseGame
                 popSound.Play(1, 0.7f, 0);
             }
             PopStarted = true;
-            texture = PopAnimation.CurrentFrame;
+            Texture = PopAnimation.CurrentFrame;
             PopAnimation.Advance();
             tint = Color.White;
             if (PopAnimation.Frame == 0)
@@ -91,7 +91,7 @@ namespace TowerDefenseGame
                     }
                     tint = colors[BalloonColor];
                     PopStarted = false;
-                    texture = PopAnimation.Frames[0];
+                    Texture = PopAnimation.Frames[0];
                 }
             }
         }

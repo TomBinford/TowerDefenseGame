@@ -25,13 +25,18 @@ namespace TowerDefenseGame
 
         public void Move()
         {
-            position.X += (float)Math.Sin(MathHelper.ToRadians(angle));
-            position.Y += (float)Math.Cos(MathHelper.ToRadians(angle));
+            position.X += (float)Math.Cos(MathHelper.ToRadians(angle)) * speed;
+            position.Y += (float)Math.Sin(MathHelper.ToRadians(angle)) * speed;
         }
 
         public bool IntersectsWith(Balloon balloon)
         {
             return Vector2.Distance(balloon.position, position) - Radius - balloon.Radius < 0;
+        }
+
+        public bool IntersectsWith(Rectangle rect)
+        {
+            return rect.Intersects(new Rectangle(position.ToPoint(), new Point(0, 0)));
         }
     }
 }
