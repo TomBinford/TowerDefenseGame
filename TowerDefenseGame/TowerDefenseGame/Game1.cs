@@ -100,7 +100,7 @@ namespace TowerDefenseGame
             towerShoot.AddFrame(second);
 
             towers = new List<Tower>();
-            towers.Add(new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f, Content.Load<Texture2D>("Dart"), 100, 500, true, TargetTypes.First));
+            // towers.Add(new Tower(towerIdle, towerShoot, new Vector2(GraphicsDevice.Viewport.Width / 2 + 50, GraphicsDevice.Viewport.Height / 2), Color.White, 1f, Content.Load<Texture2D>("Dart"), 100, 500, true, TargetTypes.First));
 
             balloonColors = new Dictionary<BalloonColors, Color>();
             balloonColors.Add(BalloonColors.Red, new Color(255, 0, 0));
@@ -115,6 +115,11 @@ namespace TowerDefenseGame
             balloonColors.Add(BalloonColors.Rainbow, new Color(255, 255, 255));
             balloonColors.Add(BalloonColors.Ceramic, new Color(120, 70, 50));
             balloonColors.Add(BalloonColors.Invincible, new Color(0, 0, 0));
+
+
+            // Example code
+            var tower = Tower.Create<LaserTower>(Vector2.One, null, null);
+            tower.Upgrade();
         }
         protected override void Update(GameTime gameTime)
         {

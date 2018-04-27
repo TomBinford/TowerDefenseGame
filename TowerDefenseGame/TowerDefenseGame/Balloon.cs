@@ -37,7 +37,7 @@ namespace TowerDefenseGame
         public Balloon(Color[,] map, float angle, float scale, float Radius, Animation animation, SoundEffect popSound, Dictionary<BalloonColors, Color> colors, BalloonColors BalloonColor, bool camo = false, bool regen = false)
             : base(animation.Frames[0], Vector2.Zero, colors[BalloonColor], angle, scale)
         {
-            position = Place(map);
+            Position = Place(map);
             this.BalloonColor = BalloonColor;
             PopAnimation = animation;
             Popped = false;
@@ -47,7 +47,7 @@ namespace TowerDefenseGame
             IsCamo = camo;
             IsRegen = regen;
             this.colors = colors;
-            tint = colors[BalloonColor];
+            Tint = colors[BalloonColor];
             this.popSound = popSound;
             MovesMade = 0;
         }
@@ -63,7 +63,7 @@ namespace TowerDefenseGame
             }
             else
             {
-                texture = PopAnimation.Frames[0];
+                Texture = PopAnimation.Frames[0];
             }
         }
 
@@ -74,9 +74,9 @@ namespace TowerDefenseGame
                 popSound.Play(1, 0.7f, 0);
             }
             PopStarted = true;
-            texture = PopAnimation.CurrentFrame;
+            Texture = PopAnimation.CurrentFrame;
             PopAnimation.Advance();
-            tint = Color.White;
+            Tint = Color.White;
             if (PopAnimation.Frame == 0)
             {
                 if (BalloonColor == BalloonColors.Red)
@@ -89,9 +89,9 @@ namespace TowerDefenseGame
                     {
                         BalloonColor--;
                     }
-                    tint = colors[BalloonColor];
+                    Tint = colors[BalloonColor];
                     PopStarted = false;
-                    texture = PopAnimation.Frames[0];
+                    Texture = PopAnimation.Frames[0];
                 }
             }
         }
@@ -104,8 +104,8 @@ namespace TowerDefenseGame
                 {
                     if (map[x, y] == new Color(0, 255, 0))
                     {
-                        position = new Vector2(x, y);
-                        return position;
+                        Position = new Vector2(x, y);
+                        return Position;
                     }
                 }
             }
@@ -114,50 +114,50 @@ namespace TowerDefenseGame
 
         private bool ColorSurrounds(Color[,] map, Color search, bool move = false)
         {
-            if (position.X + 1 < map.GetLength(0))
+            if (Position.X + 1 < map.GetLength(0))
             {
-                if (map[(int)position.X + 1, (int)position.Y] == search && lastDirection != Directions.Left)
+                if (map[(int)Position.X + 1, (int)Position.Y] == search && lastDirection != Directions.Left)
                 {
                     if (move)
                     {
                         lastDirection = Directions.Right;
-                        position.X++;
+                        Position.X++;
                     }
                     return true;
                 }
             }
-            if (position.X > 0)
+            if (Position.X > 0)
             {
-                if (map[(int)position.X - 1, (int)position.Y] == search && lastDirection != Directions.Right)
+                if (map[(int)Position.X - 1, (int)Position.Y] == search && lastDirection != Directions.Right)
                 {
                     if (move)
                     {
                         lastDirection = Directions.Left;
-                        position.X--;
+                        Position.X--;
                     }
                     return true;
                 }
             }
-            if (position.Y + 1 < map.GetLength(1))
+            if (Position.Y + 1 < map.GetLength(1))
             {
-                if (map[(int)position.X, (int)position.Y - 1] == search && lastDirection != Directions.Up)
+                if (map[(int)Position.X, (int)Position.Y - 1] == search && lastDirection != Directions.Up)
                 {
                     if (move)
                     {
                         lastDirection = Directions.Down;
-                        position.Y--;
+                        Position.Y--;
                     }
                     return true;
                 }
             }
-            if (position.Y > 0)
+            if (Position.Y > 0)
             {
-                if (map[(int)position.X, (int)position.Y + 1] == search && lastDirection != Directions.Down)
+                if (map[(int)Position.X, (int)Position.Y + 1] == search && lastDirection != Directions.Down)
                 {
                     if (move)
                     {
                         lastDirection = Directions.Up;
-                        position.Y++;
+                        Position.Y++;
                     }
                     return true;
                 }
@@ -171,7 +171,7 @@ namespace TowerDefenseGame
             {
                 return;
             }
-            Color currentColor = map[(int)position.X, (int)position.Y];
+            Color currentColor = map[(int)Position.X, (int)Position.Y];
             ColorSurrounds(map, new Color(0, 0, 0), true);
             MovesMade++;
             if (ColorSurrounds(map, new Color(255, 0, 0), false))

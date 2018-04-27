@@ -12,6 +12,9 @@ namespace SpriteLibrary
     {
         public List<Texture2D> Frames;
         public int Frame;
+        //framerate
+        //AnimateOnce
+        //Animate
 
         public Animation()
         {
@@ -32,6 +35,11 @@ namespace SpriteLibrary
         public void Advance()
         {
             Frame = (Frame + 1) % Frames.Count;
+        }
+
+        public void ResetFrame()
+        {
+            Frame = 0;
         }
         
         public Texture2D CurrentFrame => Frames[Frame];

@@ -10,43 +10,43 @@ namespace SpriteLibrary
 {
     public class Sprite
     {
-        public Vector2 position;
+        public Vector2 Position;
 
-        private Texture2D Texture;
-        public Texture2D texture
+        private Texture2D texture;
+        public Texture2D Texture
         {
             get
             {
-                return Texture;
+                return texture;
             }
             set
             {
-                Texture = value;
-                source = Texture.Bounds;
-                origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+                texture = value;
+
+                if (texture != null)
+                {
+                    Origin = new Vector2(Texture.Width / 2, Texture.Height / 2);
+                }
             }
         }
 
-        public Color tint;
-        public float angle;
-        public float scale;
-        public Vector2 origin;
-        public Rectangle source;
+        public Color Tint;
+        public float Angle;
+        public float Scale;
+        public Vector2 Origin;
 
         public Sprite(Texture2D texture, Vector2 position, Color tint, float angle, float scale)
         {
-            this.texture = texture;
-            this.position = position;
-            this.tint = tint;
-            this.angle = angle;
-            this.scale = scale;
-            origin = new Vector2(texture.Width / 2, texture.Height / 2);
-            source = texture.Bounds;
+            Texture = texture;
+            Position = position;
+            Tint = tint;
+            Angle = angle;
+            Scale = scale;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, position, null, tint, MathHelper.ToRadians(angle), origin, scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Position, null, Tint, MathHelper.ToRadians(Angle), Origin, Scale, SpriteEffects.None, 0);
         }
     }
 }

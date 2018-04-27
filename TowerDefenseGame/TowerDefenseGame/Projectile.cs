@@ -9,29 +9,27 @@ using System.Threading.Tasks;
 
 namespace TowerDefenseGame
 {
-    public class Projectile : Sprite
+    public class Projectile : CircularHitboxSprite
     {
-        public float Radius;
-
-        public int maxHits;
+        public int MaxHits;
         private float speed;
 
         public Projectile(Texture2D texture, Vector2 position, Color tint, float speed, int maxHits, float angle)
-            : base(texture, position, tint, angle, 1)
+            : base(texture, position, angle, 1)
         {
-            this.maxHits = maxHits;
+            MaxHits = maxHits;
             this.speed = speed;
         }
 
         public void Move()
         {
-            position.X += (float)Math.Sin(MathHelper.ToRadians(angle));
-            position.Y += (float)Math.Cos(MathHelper.ToRadians(angle));
+            Position.X += (float)Math.Sin(MathHelper.ToRadians(Angle));
+            Position.Y += (float)Math.Cos(MathHelper.ToRadians(Angle));
         }
 
         public bool IntersectsWith(Balloon balloon)
         {
-            return Vector2.Distance(balloon.position, position) - Radius - balloon.Radius < 0;
+            return Intersects(balloon.Position);
         }
     }
 }
