@@ -31,5 +31,10 @@ namespace TowerDefenseGame
         {
             return Intersects(balloon.Position);
         }
+
+        public bool IntersectsWith(Rectangle rect)
+        {
+            return rect.Intersects(new Rectangle(Position.ToPoint(), new Point(0, 0)));
+        }
     }
 }

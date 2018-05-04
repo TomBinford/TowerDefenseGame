@@ -165,6 +165,7 @@ namespace TowerDefenseGame
                         tower.State = AnimationStates.Idle;
                     }
                     tower.Update();
+                    tower.UpdateProjectiles();
                 }
             }
             lastMouse = currentMouse;

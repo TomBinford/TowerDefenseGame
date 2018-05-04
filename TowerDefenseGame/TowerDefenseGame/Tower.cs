@@ -31,7 +31,6 @@ namespace TowerDefenseGame
     public abstract class Tower : Sprite
     {
         protected List<Projectile> Projectiles;
-
         private Texture2D nonMovingSprite;
         private bool spriteAssigned = false;
 
@@ -130,7 +129,7 @@ namespace TowerDefenseGame
             ShootDelay = 60;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public override void Draw(SpriteBatch spriteBatch)
         {
             Texture = Animations[State].CurrentFrame;
             Animations[State].Advance();

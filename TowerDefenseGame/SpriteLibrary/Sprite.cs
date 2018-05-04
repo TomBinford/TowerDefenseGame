@@ -13,6 +13,7 @@ namespace SpriteLibrary
         public Vector2 Position;
 
         private Texture2D texture;
+
         public Texture2D Texture
         {
             get
@@ -44,7 +45,7 @@ namespace SpriteLibrary
             Scale = scale;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, Position, null, Tint, MathHelper.ToRadians(Angle), Origin, Scale, SpriteEffects.None, 0);
         }
