@@ -36,7 +36,7 @@ namespace SpriteLibrary
         public float Scale;
         public Vector2 Origin;
 
-        public Sprite(Texture2D texture, Vector2 position, Color tint, float angle, float scale)
+        public Sprite(Texture2D texture, Vector2 position, Color tint, float angle = 0, float scale = 1)
         {
             Texture = texture;
             Position = position;

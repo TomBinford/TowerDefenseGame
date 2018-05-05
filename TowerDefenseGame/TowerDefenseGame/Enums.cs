@@ -15,23 +15,12 @@ namespace TowerDefenseGame
         Left
     }
 
-    public enum BalloonColors
+    public enum Enemies
     {
-        Red = 0,
-        Blue,
-        Green,
-        Yellow,
-        Pink,
-        Black,
-        White,
-        Zebra,
-        Lead,
-        Rainbow,
-        Ceramic,
-        Invincible
+        Goblin
     }
 
-    public enum AnimationStates
+    public enum TowerStates
     {
         Idle,
         Shoot

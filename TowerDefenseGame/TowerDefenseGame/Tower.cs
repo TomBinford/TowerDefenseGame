@@ -13,55 +13,111 @@ namespace TowerDefenseGame
     {
         // TODO: Define stuff specific to Laser Tower
 
-        public override void Upgrade()
+        public override void Upgrade(int left, int right)
         {
             // TODO: Handle upgrade
+        }
+
+        public override void Update()
+        {
+            //TODO: Do things based on GameState.Get
         }
     }
 
     public class StoneTower : Tower
     {
-        public override void Upgrade()
+        public override void Upgrade(int left, int right)
         {
             // TODO: Handle upgrade
         }
+
+        public override void Update()
+        {
+            //TODO: Do things based on GameState.Get
+        }
     }
 
-
-    public abstract class Tower : Sprite
+    public abstract class Tower
     {
-        protected List<Projectile> Projectiles;
-        private Texture2D nonMovingSprite;
-        private bool spriteAssigned = false;
+        #region Properties
+        public Vector2 Position
+        {
+            get
+            {
+                return Base.Position;
+            }
+            set
+            {
+                Base.Position = value;
+            }
+        }
 
-        protected int TowerLevel;
+        private Sprite _Base;
 
-        public AnimationStates State;
+        public Sprite Base
+        {
+            get
+            {
+                return _Base;
+            }
+            set
+            {
+                _Base = value;
+                Turret.Position = Base.Position;
+            }
+        }
 
-        public TargetTypes TargetType;
+        private Sprite _Turret;
 
-        public Dictionary<AnimationStates, Animation> Animations;
+        public Sprite Turret
+        {
+            get
+            {
+                return _Turret;
+            }
+            set
+            {
+                _Turret = value;
+                Base.Position = Turret.Position;
+            }
+        }
 
-        public float Radius;
+        public Color Tint
+        {
+            get
+            {
+                return Base.Tint;
+            }
+            set
+            {
+                Base.Tint = value;
+                Turret.Tint = value;
+            }
+        }
+        public CircularHitbox Range;
+        public Rectangle Hitbox;
 
-        public float Range;
+        public TowerStates State;
+        
+        Dictionary<TowerStates, Animation> Animations;
 
-        public bool OneShot;
+        public Tuple<int, int> Level;
 
-        public Texture2D Projectile;
+        public float Angle;
+        public float AngleDegrees => MathHelper.ToDegrees(Angle);
+        #endregion Properties
 
-        private int ticksSinceShoot;
-
-        public int ShootDelay;
-
-        public static T Create<T>(Vector2 position, Dictionary<AnimationStates, Animation> animations, List<Projectile> projectiles)
+        public static T Create<T>(Vector2 position, Dictionary<TowerStates, Animation> animations)
             where T : Tower, new()
         {
             var tower = new T()
             {
-                Projectiles = projectiles,
+                Level = new Tuple<int, int>(0, 0),
+                Position = position,
+                Angle = 0,
                 Animations = animations,
-                TowerLevel = 0
+                Tint = Color.White,
+                State = TowerStates.Idle
             };
 
             switch (tower)
@@ -75,210 +131,16 @@ namespace TowerDefenseGame
                 case StoneTower stoneTower:
                     // TODO: Handle specifics of Stone Tower that are not default,
                     //       such as settings based on game state, etc
-                    stoneTower.Range = 100;
+                    stoneTower.Range.Radius = 100;
                     break;
             }
-
             return tower;
         }
+        
+        public abstract void Upgrade(int l, int r);
 
-        /// <summary>
-        /// Upgrades the tower to the next level
-        /// </summary>
-        public abstract void Upgrade();
-
-        // TODO: Remove this
-        protected Tower()
-            : base(null, Vector2.Zero, Color.White, 0f, 1f)
-        {
-
-        }
-
+        public abstract void Update();
 
         //List<Animations> Animations, Position, List<IProjectile>, int range, bool oneShot
-        public Tower(Animation idle, Animation shooting, Vector2 position, Color tint, float scale, Texture2D projectile, int radius, int range, bool oneShot, TargetTypes type, Texture2D nonMoving)
-            : base(idle.Frames[0], position, tint, 0f, scale)
-        {
-            TargetType = type;
-            Radius = radius;
-            Range = range;
-            OneShot = oneShot;
-            nonMovingSprite = nonMoving;
-            Animations = new Dictionary<AnimationStates, Animation>();
-            Animations.Add(AnimationStates.Idle, idle);
-            Animations.Add(AnimationStates.Shoot, shooting);
-            TargetType = TargetTypes.First;
-            this.Projectile = projectile;
-            Projectiles = new List<Projectile>();
-            spriteAssigned = true;
-        }
-
-        public Tower(Animation idle, Animation shooting, Vector2 position, Color tint, float scale, Texture2D Projectile, int radius, int range, bool oneShot, TargetTypes type)
-            : base(idle.Frames[0], position, tint, 0f, scale)
-        {
-            TargetType = type;
-            Radius = radius;
-            Range = range;
-            OneShot = oneShot;
-            Animations = new Dictionary<AnimationStates, Animation>();
-            Animations.Add(AnimationStates.Idle, idle);
-            Animations.Add(AnimationStates.Shoot, shooting);
-            TargetType = TargetTypes.First;
-            this.Projectile = Projectile;
-            Projectiles = new List<Projectile>();
-            ShootDelay = 60;
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            Texture = Animations[State].CurrentFrame;
-            Animations[State].Advance();
-            base.Draw(spriteBatch);
-            if (spriteAssigned)
-            {
-                spriteBatch.Draw(nonMovingSprite, Position, Tint);
-            }
-        }
-
-        public void DrawProjectiles(SpriteBatch spriteBatch)
-        {
-            if (Projectiles.Count == 0)
-            {
-                return;
-            }
-            foreach (Projectile projectile in Projectiles)
-            {
-                projectile.Draw(spriteBatch);
-            }
-        }
-
-        public bool InRange(Balloon balloon)
-        {
-            if (Range == 0)
-            {
-                return true;
-            }
-            return (Vector2.Distance(balloon.Position, Position) - (Range + balloon.Radius) < 0) && Animations[State].Frame == 0;
-        }
-
-        public void Update()
-        {
-            Animations[State].Advance();
-            if (Animations[State].Frame == Animations[State].Frames.Count - 1)
-            {
-                if (State != AnimationStates.Idle)
-                {
-                    Animations[State].Frame = 0;
-                }
-                State = AnimationStates.Idle;
-            }
-            ticksSinceShoot++;
-        }
-
-        public void Shoot(Balloon target)
-        {
-            if (ticksSinceShoot < ShootDelay)
-            {
-                return;
-            }
-            ticksSinceShoot = 0;
-            Vector2 angleVector = Vector2.Subtract(Position, target.Position);
-            Angle = MathHelper.ToDegrees((float)Math.Atan2(-1 * angleVector.X, angleVector.Y));
-            State = AnimationStates.Shoot;
-            Projectiles.Add(new Projectile(Projectile, Position, Color.White, 1, 1, Angle - 90));
-        }
-
-        public Balloon BestShot(List<Balloon> balloons)
-        {
-            if (balloons.Count == 0)
-            {
-                return null;
-            }
-            Balloon bestCandidate = null;
-            foreach (Balloon balloon in balloons)
-            {
-                switch (TargetType)
-                {
-                    case TargetTypes.First:
-                        if (bestCandidate != null)
-                        {
-                            if (balloon.MovesMade > bestCandidate.MovesMade)
-                            {
-                                bestCandidate.PopStarted = false;
-                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
-                                bestCandidate = balloon;
-                            }
-                        }
-                        else
-                        {
-                            bestCandidate = balloon;
-                        }
-                        break;
-                    case TargetTypes.Last:
-                        if (bestCandidate != null)
-                        {
-                            if (balloon.MovesMade < bestCandidate.MovesMade)
-                            {
-                                bestCandidate.PopStarted = false;
-                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
-                                bestCandidate = balloon;
-                            }
-                        }
-                        else
-                        {
-                            bestCandidate = balloon;
-                        }
-                        break;
-                    case TargetTypes.Close:
-                        if (bestCandidate != null)
-                        {
-                            if (Vector2.Distance(Position, balloon.Position) < Vector2.Distance(Position, bestCandidate.Position))
-                            {
-                                bestCandidate.PopStarted = false;
-                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
-                                bestCandidate = balloon;
-                            }
-                        }
-                        else
-                        {
-                            bestCandidate = balloon;
-                        }
-                        break;
-                    case TargetTypes.Strong:
-                        if (bestCandidate != null)
-                        {
-                            if ((int)balloon.BalloonColor > (int)bestCandidate.BalloonColor)
-                            {
-                                bestCandidate.PopStarted = false;
-                                bestCandidate.Texture = bestCandidate.PopAnimation.Frames[0];
-                                bestCandidate = balloon;
-                            }
-                        }
-                        else
-                        {
-                            bestCandidate = balloon;
-                        }
-                        break;
-                }
-                if (balloon != bestCandidate)
-                {
-                    balloon.Texture = balloon.PopAnimation.Frames[0];
-                    balloon.PopStarted = false;
-                }
-            }
-            return bestCandidate;
-        }
-
-        public void UpdateProjectiles()
-        {
-            if (Projectiles.Count == 0)
-            {
-                return;
-            }
-            foreach (Projectile projectile in Projectiles)
-            {
-                projectile.Move();
-            }
-        }
     }
 }
