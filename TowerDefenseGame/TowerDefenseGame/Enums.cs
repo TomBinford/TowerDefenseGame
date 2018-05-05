@@ -15,9 +15,17 @@ namespace TowerDefenseGame
         Left
     }
 
-    public enum Enemies
+    public enum EnemyTypes
     {
         Goblin
+    }
+
+    public enum UnitStates
+    {
+        Walking,
+        Attacking,
+        Dying,
+        Hurt
     }
 
     public enum TowerStates
@@ -26,11 +34,11 @@ namespace TowerDefenseGame
         Shoot
     }
 
-    public enum TargetTypes
+    public enum TowerTypes
     {
-        First,
-        Close,
-        Last,
-        Strong
+        Support,
+        Archer,
+        Magic,
+        Stone
     }
 }

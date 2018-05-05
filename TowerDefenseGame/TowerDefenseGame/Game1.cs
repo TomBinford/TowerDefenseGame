@@ -56,14 +56,14 @@ namespace TowerDefenseGame
             towers = new List<Tower>();
             
             // Example code
-            var tower = Tower.Create<LaserTower>(Vector2.One, null);
-            tower.Upgrade(0, 0);
+            var tower = Tower.Create<ArcherTower>(Vector2.One, null, null);
+            tower.Upgrade();
         }
         protected override void Update(GameTime gameTime)
         {
-            GameState.Get.currentMouse = Mouse.GetState();
+            GameState.Get.CurrentMouse = Mouse.GetState();
 
-            GameState.Get.oldMouse = GameState.Get.currentMouse;
+            GameState.Get.OldMouse = GameState.Get.CurrentMouse;
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)

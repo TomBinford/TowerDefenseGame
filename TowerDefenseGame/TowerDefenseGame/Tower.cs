@@ -9,24 +9,67 @@ using SpriteLibrary;
 
 namespace TowerDefenseGame
 {
-    public class LaserTower : Tower
+    public class ArcherTower : Tower
     {
-        // TODO: Define stuff specific to Laser Tower
-
-        public override void Upgrade(int left, int right)
+        public Sprite Turret2 = null;
+        
+        public override void Upgrade()
         {
             // TODO: Handle upgrade
+            Level++;
+            if (Level == 2)
+            {
+                Turret2 = Turret;
+                Turret.Position.X += 20;
+                Turret2.Position.X -= 20;
+                //Create another archer
+            }
+        }
+
+        public override void Update()
+        {
+            if (Turret2 != null)
+            {
+
+            }
+            //TODO: Do things based on GameState.Get
+        }
+
+        public override void DrawTower(SpriteBatch spriteBatch)
+        {
+            Base.Draw(spriteBatch);
+            if (Turret2 == null)
+            { }
+            else
+            {
+                Turret2.Draw(spriteBatch);
+            }
+            Turret.Draw(spriteBatch);
+        }
+    }
+
+    public class BallistaTower : Tower
+    {
+        public override void Upgrade()
+        {
+            // TODO: Handle upgrade
+            Level++;
         }
 
         public override void Update()
         {
             //TODO: Do things based on GameState.Get
+        }
+
+        public override void DrawTower(SpriteBatch spriteBatch)
+        {
+            Base.Draw(spriteBatch);
         }
     }
 
     public class StoneTower : Tower
     {
-        public override void Upgrade(int left, int right)
+        public override void Upgrade()
         {
             // TODO: Handle upgrade
         }
@@ -34,6 +77,11 @@ namespace TowerDefenseGame
         public override void Update()
         {
             //TODO: Do things based on GameState.Get
+        }
+
+        public override void DrawTower(SpriteBatch spriteBatch)
+        {
+            Base.Draw(spriteBatch);
         }
     }
 
@@ -52,7 +100,7 @@ namespace TowerDefenseGame
             }
         }
 
-        private Sprite _Base;
+        protected Sprite _Base;
 
         public Sprite Base
         {
@@ -67,20 +115,7 @@ namespace TowerDefenseGame
             }
         }
 
-        private Sprite _Turret;
-
-        public Sprite Turret
-        {
-            get
-            {
-                return _Turret;
-            }
-            set
-            {
-                _Turret = value;
-                Base.Position = Turret.Position;
-            }
-        }
+        public Sprite Turret;
 
         public Color Tint
         {
@@ -99,47 +134,52 @@ namespace TowerDefenseGame
 
         public TowerStates State;
         
-        Dictionary<TowerStates, Animation> Animations;
+        Dictionary<TowerStates, Animation> TurretAnimations;
 
-        public Tuple<int, int> Level;
-
-        public float Angle;
-        public float AngleDegrees => MathHelper.ToDegrees(Angle);
+        public int Level;
         #endregion Properties
 
-        public static T Create<T>(Vector2 position, Dictionary<TowerStates, Animation> animations)
+        public static T Create<T>(Vector2 position, Texture2D baseTexture, Dictionary<TowerStates, Animation> turretAnimations = null)
             where T : Tower, new()
         {
             var tower = new T()
             {
-                Level = new Tuple<int, int>(0, 0),
-                Position = position,
-                Angle = 0,
-                Animations = animations,
+                Level = 0,
+                Base = new Sprite(baseTexture, position, Color.White),
+                TurretAnimations = turretAnimations,
                 Tint = Color.White,
                 State = TowerStates.Idle
             };
 
+            if (turretAnimations != null)
+            {
+                tower.Turret = new Sprite(turretAnimations[TowerStates.Idle].CurrentFrame, position, Color.White);
+            }
+            else
+            {
+                tower.Turret = new Sprite(null, position, Color.White);
+            }
+
             switch (tower)
             {
-                case LaserTower laserTower:
+                case ArcherTower archerTower:
                     // TODO: Handle specifics of Laser Tower that are not default,
                     //       such as settings based on game state, etc
-                    laserTower.Angle = 45;
                     break;
 
                 case StoneTower stoneTower:
                     // TODO: Handle specifics of Stone Tower that are not default,
                     //       such as settings based on game state, etc
-                    stoneTower.Range.Radius = 100;
                     break;
             }
             return tower;
         }
         
-        public abstract void Upgrade(int l, int r);
+        public abstract void Upgrade();
 
         public abstract void Update();
+
+        public abstract void DrawTower(SpriteBatch spriteBatch);
 
         //List<Animations> Animations, Position, List<IProjectile>, int range, bool oneShot
     }
