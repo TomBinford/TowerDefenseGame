@@ -35,6 +35,7 @@ namespace SpriteLibrary
         public float Angle;
         public float Scale;
         public Vector2 Origin;
+        public SpriteEffects Effect;
 
         public Sprite(Texture2D texture, Vector2 position, Color tint, float angle = 0, float scale = 1)
         {
@@ -43,6 +44,7 @@ namespace SpriteLibrary
             Tint = tint;
             Angle = angle;
             Scale = scale;
+            Effect = SpriteEffects.None;
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -51,7 +53,7 @@ namespace SpriteLibrary
             {
                 return;
             }
-            spriteBatch.Draw(Texture, Position, null, Tint, MathHelper.ToRadians(Angle), Origin, Scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Position, null, Tint, MathHelper.ToRadians(Angle), Origin, Scale, Effect, 0);
         }
     }
 }

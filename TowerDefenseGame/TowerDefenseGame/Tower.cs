@@ -11,26 +11,152 @@ namespace TowerDefenseGame
 {
     public class ArcherTower : Tower
     {
-        public Sprite Turret2 = null;
-        
+        public Sprite Archer2 = null;
+        bool leftShooting;
+        bool rightShooting;
+        Dictionary<TowerStates, Animation> Archer2Animations;
+
         public override void Upgrade()
         {
             // TODO: Handle upgrade
             Level++;
+            State = TowerStates.Idle;
             if (Level == 2)
             {
-                Turret2 = Turret;
+                Archer2Animations = TurretAnimations;
+                Archer2 = Turret;
                 Turret.Position.X += 20;
-                Turret2.Position.X -= 20;
+                Archer2.Position.X -= 20;
                 //Create another archer
             }
         }
 
         public override void Update()
         {
-            if (Turret2 != null)
+            if (Archer2 != null)
             {
-
+                switch (State)
+                {
+                    case TowerStates.Idle://Has to always be idle because tower has to find targets and shoot at the same time
+                        Target = Vector2.Zero;
+                        float lowestRange = float.PositiveInfinity;
+                        for (int i = 0; i < GameState.Get.Enemies.Count; i++)
+                        {
+                            if (Range.Intersects(GameState.Get.Enemies.ElementAt(i).Position))
+                            {
+                                float newRange = Vector2.Distance(Range.Position, GameState.Get.Enemies.ElementAt(i).Position);
+                                if (newRange < lowestRange)
+                                {
+                                    Target = GameState.Get.Enemies.ElementAt(i).Position;
+                                    lowestRange = newRange;
+                                }
+                            }
+                        }
+                        if (lowestRange != float.PositiveInfinity)//If a target was found, determine which archer to use and what direction to face it
+                        {
+                            if (Target.X <= TruePosition.X)//shoot left
+                            {
+                                if (!leftShooting)
+                                {
+                                    leftShooting = true;
+                                    Archer2.Effect = SpriteEffects.FlipHorizontally;
+                                }
+                                else if(!rightShooting)
+                                {
+                                    rightShooting = true;
+                                    Turret.Effect = SpriteEffects.FlipHorizontally;
+                                }
+                            }
+                            else//shoot right
+                            {
+                                if (!rightShooting)
+                                {
+                                    rightShooting = true;
+                                    Turret.Effect = SpriteEffects.None;
+                                }
+                                else if (!leftShooting)
+                                {
+                                    leftShooting = true;
+                                    Archer2.Effect = SpriteEffects.None;
+                                }
+                            }
+                        }
+                        if (leftShooting)
+                        {
+                            Archer2Animations[TowerStates.Shoot].Advance();
+                            if (Archer2Animations[TowerStates.Shoot].Frame == 0)
+                            {
+                                leftShooting = false;
+                            }
+                            else if (Archer2Animations[TowerStates.Shoot].Frame == ShootFrame)
+                            {
+                                //TODO: Add projectile to GameState.Get pointing toward Target
+                            }
+                            Archer2.Texture = Archer2Animations[TowerStates.Shoot].CurrentFrame;
+                        }
+                        if (rightShooting)
+                        {
+                            TurretAnimations[TowerStates.Shoot].Advance();
+                            if (TurretAnimations[TowerStates.Shoot].Frame == 0)
+                            {
+                                leftShooting = false;
+                            }
+                            else if (TurretAnimations[TowerStates.Shoot].Frame == ShootFrame)
+                            {
+                                //TODO: Add projectile to GameState.Get pointing toward Target
+                            }
+                            Turret.Texture = TurretAnimations[TowerStates.Shoot].CurrentFrame;
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                switch (State)
+                {
+                    case TowerStates.Idle:
+                        Target = Vector2.Zero;
+                        float lowestRange = float.PositiveInfinity;
+                        for (int i = 0; i < GameState.Get.Enemies.Count; i++)
+                        {
+                            if (Range.Intersects(GameState.Get.Enemies.ElementAt(i).Position))
+                            {
+                                float newRange = Vector2.Distance(Range.Position, GameState.Get.Enemies.ElementAt(i).Position);
+                                if (newRange < lowestRange)
+                                {
+                                    Target = GameState.Get.Enemies.ElementAt(i).Position;
+                                    lowestRange = newRange;
+                                }
+                            }
+                        }
+                        if (lowestRange != float.PositiveInfinity)//If a target was found, determine what direction to face the archer
+                        {
+                            if (Target.X <= TruePosition.X)
+                            {
+                                //Face left
+                                Turret.Effect = SpriteEffects.FlipHorizontally;
+                            }
+                            else
+                            {
+                                //Face right
+                                Turret.Effect = SpriteEffects.None;
+                            }
+                            State = TowerStates.Shoot;
+                        }
+                        break;
+                    case TowerStates.Shoot:
+                        TurretAnimations[TowerStates.Shoot].Advance();
+                        if (TurretAnimations[TowerStates.Shoot].Frame == 0)
+                        {
+                            State = TowerStates.Idle;
+                        }
+                        else if (TurretAnimations[TowerStates.Shoot].Frame == ShootFrame)
+                        {
+                            //TODO: Add Projectile to GameState.Get
+                        }
+                        Turret.Texture = TurretAnimations[TowerStates.Shoot].CurrentFrame;
+                        break;
+                }
             }
             //TODO: Do things based on GameState.Get
         }
@@ -38,11 +164,11 @@ namespace TowerDefenseGame
         public override void DrawTower(SpriteBatch spriteBatch)
         {
             Base.Draw(spriteBatch);
-            if (Turret2 == null)
+            if (Archer2 == null)
             { }
             else
             {
-                Turret2.Draw(spriteBatch);
+                Archer2.Draw(spriteBatch);
             }
             Turret.Draw(spriteBatch);
         }
@@ -88,17 +214,7 @@ namespace TowerDefenseGame
     public abstract class Tower
     {
         #region Properties
-        public Vector2 Position
-        {
-            get
-            {
-                return Base.Position;
-            }
-            set
-            {
-                Base.Position = value;
-            }
-        }
+        public Vector2 TruePosition;
 
         protected Sprite _Base;
 
@@ -133,27 +249,33 @@ namespace TowerDefenseGame
         public Rectangle Hitbox;
 
         public TowerStates State;
-        
-        Dictionary<TowerStates, Animation> TurretAnimations;
+
+        public Dictionary<TowerStates, Animation> TurretAnimations;
+
+        public int ShootFrame;
+        public Vector2 Target;
 
         public int Level;
         #endregion Properties
 
-        public static T Create<T>(Vector2 position, Texture2D baseTexture, Dictionary<TowerStates, Animation> turretAnimations = null)
+        public static T Create<T>(Vector2 position, Texture2D baseTexture, Vector2 BaseOffset, Vector2 TurretOffset, Dictionary<TowerStates, Animation> turretAnimations = null, int shootFrame = 0)
             where T : Tower, new()
         {
             var tower = new T()
             {
                 Level = 0,
-                Base = new Sprite(baseTexture, position, Color.White),
+                TruePosition = position,
+                Base = new Sprite(baseTexture, position + BaseOffset, Color.White),
+                Range = new CircularHitbox(10, position),
                 TurretAnimations = turretAnimations,
+                ShootFrame = shootFrame,
                 Tint = Color.White,
                 State = TowerStates.Idle
             };
 
             if (turretAnimations != null)
             {
-                tower.Turret = new Sprite(turretAnimations[TowerStates.Idle].CurrentFrame, position, Color.White);
+                tower.Turret = new Sprite(turretAnimations[TowerStates.Idle].CurrentFrame, position + TurretOffset, Color.White);
             }
             else
             {
@@ -174,7 +296,7 @@ namespace TowerDefenseGame
             }
             return tower;
         }
-        
+
         public abstract void Upgrade();
 
         public abstract void Update();
