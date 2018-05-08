@@ -15,16 +15,22 @@ namespace TowerDefenseGame
         bool leftShooting;
         bool rightShooting;
         Dictionary<TowerStates, Animation> Archer2Animations;
+        public Sprite Arrow;
+        public Sprite Arrow2;
+        public float ArrowSpeed;
 
         public override void Upgrade()
         {
             // TODO: Handle upgrade
             Level++;
             State = TowerStates.Idle;
+            TurretAnimations[TowerStates.Shoot].Frame = 0;
+            TurretAnimations[TowerStates.Idle].Frame = 0;
             if (Level == 2)
             {
                 Archer2Animations = TurretAnimations;
                 Archer2 = Turret;
+                Arrow2 = Arrow;
                 Turret.Position.X += 20;
                 Archer2.Position.X -= 20;
                 //Create another archer
@@ -39,20 +45,23 @@ namespace TowerDefenseGame
                 {
                     case TowerStates.Idle://Has to always be idle because tower has to find targets and shoot at the same time
                         Target = Vector2.Zero;
-                        float lowestRange = float.PositiveInfinity;
+                        float lowestRange = -1;
+
+                        var n = GameState.Get.Enemies.First;
                         for (int i = 0; i < GameState.Get.Enemies.Count; i++)
                         {
-                            if (Range.Intersects(GameState.Get.Enemies.ElementAt(i).Position))
+                            if (Range.Intersects(n.Value.Position))
                             {
-                                float newRange = Vector2.Distance(Range.Position, GameState.Get.Enemies.ElementAt(i).Position);
+                                float newRange = Vector2.Distance(Range.Position, n.Value.Position);
                                 if (newRange < lowestRange)
                                 {
-                                    Target = GameState.Get.Enemies.ElementAt(i).Position;
+                                    Target = n.Value.Position;
                                     lowestRange = newRange;
                                 }
                             }
+                            n = n.Next;
                         }
-                        if (lowestRange != float.PositiveInfinity)//If a target was found, determine which archer to use and what direction to face it
+                        if (lowestRange != -1)//If a target was found, determine which archer to use and what direction to face it
                         {
                             if (Target.X <= TruePosition.X)//shoot left
                             {
@@ -110,26 +119,30 @@ namespace TowerDefenseGame
                         break;
                 }
             }
-            else
+            else//only one archer
             {
                 switch (State)
                 {
                     case TowerStates.Idle:
                         Target = Vector2.Zero;
-                        float lowestRange = float.PositiveInfinity;
+                        float lowestRange = -1;
+                        
+                        var n = GameState.Get.Enemies.First;
                         for (int i = 0; i < GameState.Get.Enemies.Count; i++)
                         {
-                            if (Range.Intersects(GameState.Get.Enemies.ElementAt(i).Position))
+                            if (Range.Intersects(n.Value.Position))
                             {
-                                float newRange = Vector2.Distance(Range.Position, GameState.Get.Enemies.ElementAt(i).Position);
+                                float newRange = Vector2.Distance(Range.Position, n.Value.Position);
                                 if (newRange < lowestRange)
                                 {
-                                    Target = GameState.Get.Enemies.ElementAt(i).Position;
+                                    Target = n.Value.Position;
                                     lowestRange = newRange;
                                 }
                             }
+                            n = n.Next;
                         }
-                        if (lowestRange != float.PositiveInfinity)//If a target was found, determine what direction to face the archer
+
+                        if (lowestRange != -1)//If a target was found, determine what direction to face the archer
                         {
                             if (Target.X <= TruePosition.X)
                             {
@@ -158,7 +171,6 @@ namespace TowerDefenseGame
                         break;
                 }
             }
-            //TODO: Do things based on GameState.Get
         }
 
         public override void DrawTower(SpriteBatch spriteBatch)
@@ -258,7 +270,7 @@ namespace TowerDefenseGame
         public int Level;
         #endregion Properties
 
-        public static T Create<T>(Vector2 position, Texture2D baseTexture, Vector2 BaseOffset, Vector2 TurretOffset, Dictionary<TowerStates, Animation> turretAnimations = null, int shootFrame = 0)
+        public static T Create<T>(Vector2 position, Texture2D baseTexture, Vector2 BaseOffset, Vector2 TurretOffset, int shootFrame = 0, Texture2D arrow = null, float arrowSpeed = 0, Dictionary<TowerStates, Animation> turretAnimations = null)
             where T : Tower, new()
         {
             var tower = new T()
@@ -285,6 +297,8 @@ namespace TowerDefenseGame
             switch (tower)
             {
                 case ArcherTower archerTower:
+                    archerTower.Arrow = new Sprite(arrow, Vector2.Zero, Color.White);
+                    archerTower.ArrowSpeed = arrowSpeed;
                     // TODO: Handle specifics of Laser Tower that are not default,
                     //       such as settings based on game state, etc
                     break;

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using SpriteLibrary;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace TowerDefenseGame
         
         public LinkedList<Enemy> Enemies;
         public LinkedList<Soldier> Soldiers;
+        public LinkedList<Sprite> ProjectilePositions;
 
         public ulong Money;
         
@@ -23,6 +25,8 @@ namespace TowerDefenseGame
         {
             Money = 0;
             Enemies = new LinkedList<Enemy>();
+            Soldiers = new LinkedList<Soldier>();
+            ProjectilePositions = new LinkedList<Sprite>();
         }
 
         public static GameState Get
