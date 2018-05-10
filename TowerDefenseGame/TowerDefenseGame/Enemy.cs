@@ -16,12 +16,19 @@ namespace TowerDefenseGame
         public Directions Direction;
         public Soldier Target;
         public float Speed;
+        public float Health;
+        public float Range;
+        public float AttackDamage;
 
-        public Enemy(Dictionary<UnitStates, Animation> animations, Vector2 position) : base(animations[UnitStates.Walking].CurrentFrame, position, Color.White)
+        public Enemy(Dictionary<UnitStates, Animation> animations, Vector2 position, float Range, float AttackDamage, float Health) : base(animations[UnitStates.Walking].CurrentFrame, position, Color.White)
         {
             Animations = animations;
-            State = UnitStates.Walking;
+            State = UnitStates.Idle;
             Direction = Directions.None;
+            this.Range = Range;
+            this.AttackDamage = AttackDamage;
+            this.Health = Health;
+            Target = null;
         }
 
         public void Update()
@@ -44,6 +51,22 @@ namespace TowerDefenseGame
                         case Directions.Down:
                             Position.Y += Speed;
                             break;
+                        case Directions.UpLeft:
+                            Position.X -= Speed / (float)Math.Sqrt(2);
+                            Position.Y -= Speed / (float)Math.Sqrt(2);
+                            break;
+                        case Directions.UpRight:
+                            Position.X += Speed / (float)Math.Sqrt(2);
+                            Position.Y -= Speed / (float)Math.Sqrt(2);
+                            break;
+                        case Directions.DownLeft:
+                            Position.X -= Speed / (float)Math.Sqrt(2);
+                            Position.Y += Speed / (float)Math.Sqrt(2);
+                            break;
+                        case Directions.DownRight:
+                            Position.X += Speed / (float)Math.Sqrt(2);
+                            Position.Y += Speed / (float)Math.Sqrt(2);
+                            break;
                     }
                     break;
                 case UnitStates.Dying:
@@ -56,6 +79,41 @@ namespace TowerDefenseGame
                     break;
                 case UnitStates.Attacking:
                     Animations[State].Advance();
+                    if (Animations[State].Frame == 0)
+                    {
+                        if (Target != null)
+                        {
+                            Target.Health -= AttackDamage;
+                            Target.State = UnitStates.Hurt;
+                            if (Target.Health < 0)
+                            {
+                                Target.State = UnitStates.Dying;
+                                State = UnitStates.Idle;
+                                Target = null;
+                            }
+                        }
+                    }
+                    break;
+                case UnitStates.Idle:
+                    float lowestRange = -1;
+                    var n = GameState.Get.Soldiers.First;
+                    while(n != null)
+                    {
+                        float r = Vector2.Distance(n.Value.Position, Position);
+                        if (r < Range)
+                        {
+                            if (r < lowestRange)
+                            {
+                                Target = n.Value;
+                                lowestRange = r;
+                            }
+                        }
+                        n = n.Next;
+                    }
+                    if (Target != null)
+                    {
+                        State = UnitStates.Walking;
+                    }
                     break;
             }
             Texture = Animations[State].CurrentFrame;

@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 
 namespace TowerDefenseGame
 {
+    [Flags]
     public enum Directions
     {
-        None,
-        Up,
-        Right,
-        Down,
-        Left
+        None = 0,
+        Up = 1,
+        Right = 2,
+        Down = 4,
+        Left = 8,
+        UpLeft = Up | Left,
+        UpRight = Up | Right,
+        DownLeft = Down | Left,
+        DownRight = Down | Right,
+        InvalidUpDown = Up | Down,
+        InvalidLeftRight = Left | Right
     }
 
     public enum EnemyTypes
@@ -25,7 +32,8 @@ namespace TowerDefenseGame
         Walking,
         Attacking,
         Dying,
-        Hurt
+        Hurt,
+        Idle
     }
 
     public enum TowerStates

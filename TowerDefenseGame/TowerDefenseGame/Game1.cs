@@ -20,8 +20,6 @@ namespace TowerDefenseGame
         
         Random random = new Random();
 
-        float balloonScale = 1f;
-
         Color[,] map;
         
         public Color[,] GetColors(Texture2D texture)
@@ -54,11 +52,12 @@ namespace TowerDefenseGame
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             towers = new List<Tower>();
-            
+
             // Example code
-            var tower = Tower.Create<ArcherTower>(Vector2.One, null, null);
-            tower.Upgrade();
+            //var tower = Tower.Create<ArcherTower>(Vector2.One, null, null);
+            //tower.Upgrade();
         }
+
         protected override void Update(GameTime gameTime)
         {
             GameState.Get.CurrentMouse = Mouse.GetState();

@@ -48,7 +48,7 @@ namespace TowerDefenseGame
                         float lowestRange = -1;
 
                         var n = GameState.Get.Enemies.First;
-                        for (int i = 0; i < GameState.Get.Enemies.Count; i++)
+                        while(n != null)
                         {
                             if (Range.Intersects(n.Value.Position))
                             {
