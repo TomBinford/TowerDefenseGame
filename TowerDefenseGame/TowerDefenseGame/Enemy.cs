@@ -13,18 +13,16 @@ namespace TowerDefenseGame
     {
         public Dictionary<UnitStates, Animation> Animations;
         public UnitStates State;
-        public Directions Direction;
         public Soldier Target;
         public float Speed;
         public float Health;
         public float Range;
         public float AttackDamage;
 
-        public Enemy(Dictionary<UnitStates, Animation> animations, Vector2 position, float Range, float AttackDamage, float Health) : base(animations[UnitStates.Walking].CurrentFrame, position, Color.White)
+        public Enemy(Dictionary<UnitStates, Animation> animations, Vector2 position, float Speed, float Range, float AttackDamage, float Health) : base(animations[UnitStates.Idle].CurrentFrame, position, Color.White)
         {
             Animations = animations;
             State = UnitStates.Idle;
-            Direction = Directions.None;
             this.Range = Range;
             this.AttackDamage = AttackDamage;
             this.Health = Health;
@@ -33,44 +31,15 @@ namespace TowerDefenseGame
 
         public void Update()
         {
-            switch(State)
+            Animations[State].Advance();
+            switch (State)
             {
                 case UnitStates.Walking:
-                    Animations[State].Advance();
-                    switch (Direction)
-                    {
-                        case Directions.Right:
-                            Position.X += Speed;
-                            break;
-                        case Directions.Left:
-                            Position.X -= Speed;
-                            break;
-                        case Directions.Up:
-                            Position.Y -= Speed;
-                            break;
-                        case Directions.Down:
-                            Position.Y += Speed;
-                            break;
-                        case Directions.UpLeft:
-                            Position.X -= Speed / (float)Math.Sqrt(2);
-                            Position.Y -= Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.UpRight:
-                            Position.X += Speed / (float)Math.Sqrt(2);
-                            Position.Y -= Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.DownLeft:
-                            Position.X -= Speed / (float)Math.Sqrt(2);
-                            Position.Y += Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.DownRight:
-                            Position.X += Speed / (float)Math.Sqrt(2);
-                            Position.Y += Speed / (float)Math.Sqrt(2);
-                            break;
-                    }
+                    double angle = (float)Math.Atan2(Target.Position.Y - Position.Y, Target.Position.X - Position.X);
+                    Position.X += (float)(Math.Cos(angle) * Speed);
+                    Position.Y += (float)(Math.Sin(angle) * Speed);
                     break;
                 case UnitStates.Dying:
-                    Animations[State].Advance();
                     if (Animations[State].Frame == 0)
                     {
                         GameState.Get.Enemies.Remove(this);
@@ -78,7 +47,6 @@ namespace TowerDefenseGame
                     }
                     break;
                 case UnitStates.Attacking:
-                    Animations[State].Advance();
                     if (Animations[State].Frame == 0)
                     {
                         if (Target != null)
@@ -92,6 +60,12 @@ namespace TowerDefenseGame
                                 Target = null;
                             }
                         }
+                    }
+                    break;
+                case UnitStates.Hurt:
+                    if (Animations[State].Frame == 0)
+                    {
+                        State = UnitStates.Idle;
                     }
                     break;
                 case UnitStates.Idle:

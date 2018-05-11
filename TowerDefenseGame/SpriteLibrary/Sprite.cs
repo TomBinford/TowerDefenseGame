@@ -53,7 +53,7 @@ namespace SpriteLibrary
             {
                 return;
             }
-            spriteBatch.Draw(Texture, Position, null, Tint, MathHelper.ToRadians(Angle), Origin, Scale, Effect, 0);
+            spriteBatch.Draw(Texture, Position, null, Tint, Angle, Origin, Scale, Effect, 0);
         }
     }
 }

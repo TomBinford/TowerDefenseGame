@@ -29,46 +29,68 @@ namespace TowerDefenseGame
             this.AttackDamage = AttackDamage;
             this.Health = Health;
         }
-
         public void Update()
         {
+            Animations[State].Advance();
             switch (State)
             {
                 case UnitStates.Walking:
-                    Animations[State].Advance();
-                    switch (Direction)
+                    double angle = (float)Math.Atan2(Target.Position.Y - Position.Y, Target.Position.X - Position.X);
+                    Position.X += (float)(Math.Cos(angle) * Speed);
+                    Position.Y += (float)(Math.Sin(angle) * Speed);
+                    break;
+                case UnitStates.Dying:
+                    if (Animations[State].Frame == 0)
                     {
-                        case Directions.Right:
-                            Position.X += Speed;
-                            break;
-                        case Directions.Left:
-                            Position.X -= Speed;
-                            break;
-                        case Directions.Up:
-                            Position.Y -= Speed;
-                            break;
-                        case Directions.Down:
-                            Position.Y += Speed;
-                            break;
-                        case Directions.UpLeft:
-                            Position.X -= Speed / (float)Math.Sqrt(2);
-                            Position.Y -= Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.UpRight:
-                            Position.X += Speed / (float)Math.Sqrt(2);
-                            Position.Y -= Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.DownLeft:
-                            Position.X -= Speed / (float)Math.Sqrt(2);
-                            Position.Y += Speed / (float)Math.Sqrt(2);
-                            break;
-                        case Directions.DownRight:
-                            Position.X += Speed / (float)Math.Sqrt(2);
-                            Position.Y += Speed / (float)Math.Sqrt(2);
-                            break;
+                        GameState.Get.Soldiers.Remove(this);
+                        return;
+                    }
+                    break;
+                case UnitStates.Attacking:
+                    if (Animations[State].Frame == 0)
+                    {
+                        if (Target != null)
+                        {
+                            Target.Health -= AttackDamage;
+                            Target.State = UnitStates.Hurt;
+                            if (Target.Health < 0)
+                            {
+                                Target.State = UnitStates.Dying;
+                                State = UnitStates.Idle;
+                                Target = null;
+                            }
+                        }
+                    }
+                    break;
+                case UnitStates.Hurt:
+                    if (Animations[State].Frame == 0)
+                    {
+                        State = UnitStates.Idle;
+                    }
+                    break;
+                case UnitStates.Idle:
+                    float lowestRange = -1;
+                    var n = GameState.Get.Enemies.First;
+                    while (n != null)
+                    {
+                        float r = Vector2.Distance(n.Value.Position, Position);
+                        if (r < Range)
+                        {
+                            if (r < lowestRange)
+                            {
+                                Target = n.Value;
+                                lowestRange = r;
+                            }
+                        }
+                        n = n.Next;
+                    }
+                    if (Target != null)
+                    {
+                        State = UnitStates.Walking;
                     }
                     break;
             }
+            Texture = Animations[State].CurrentFrame;
         }
     }
 }

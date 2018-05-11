@@ -14,13 +14,17 @@ namespace TowerDefenseGame
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
         
-        Texture2D m;
+        Sprite MouseSprite;
+        Vector2 MouseOffset;
+
+        Button TestButton;
+        bool SoundOn;
+        Texture2D soundOn;
+        Texture2D soundOff;
 
         List<Tower> towers;
         
         Random random = new Random();
-
-        Color[,] map;
         
         public Color[,] GetColors(Texture2D texture)
         {
@@ -42,14 +46,36 @@ namespace TowerDefenseGame
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
+
         protected override void Initialize()
         {
-            IsMouseVisible = true;
+            IsMouseVisible = false;
             base.Initialize();
         }
+
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            MouseSprite = new Sprite(Content.Load<Texture2D>("GUI/MouseCursor"), Vector2.Zero, Color.White, MathHelper.ToRadians(250), 0.5f);
+            MouseOffset.Y = (MouseSprite.Texture.Height / -2) + 6;
+            MouseOffset.X = -4;
+
+            soundOff = Content.Load<Texture2D>("GUI/SoundOff");
+            soundOn = Content.Load<Texture2D>("GUI/SoundOn");
+
+            Rectangle rect = soundOn.Bounds;
+            rect.X = 300;
+            rect.Y = 300;
+
+            TestButton = new Button(rect, soundOn, 1f, 0.9f, null, "");
+            SoundOn = true;
+
+            Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
+            Animation animation = new Animation();
+            //animation.AddFrame(Content.Load<Texture2D>(""));
+
+            dictionary.Add(UnitStates.Idle, animation);
 
             towers = new List<Tower>();
 
@@ -61,15 +87,41 @@ namespace TowerDefenseGame
         protected override void Update(GameTime gameTime)
         {
             GameState.Get.CurrentMouse = Mouse.GetState();
+            MouseSprite.Position = GameState.Get.CurrentMouse.Position.ToVector2() - MouseOffset;
+            if (GameState.Get.CurrentMouse.LeftButton == ButtonState.Pressed)
+            {
+                MouseSprite.Scale = 0.4f;
+            }
+            else
+            {
+                MouseSprite.Scale = 0.5f;
+            }
+
+            if (TestButton.IsClicked(GameState.Get.CurrentMouse) && !TestButton.IsClicked(GameState.Get.OldMouse))
+            {
+                SoundOn = !SoundOn;
+                if (SoundOn)
+                {
+                    TestButton.Texture = soundOn;
+                }
+                else
+                {
+                    TestButton.Texture = soundOff;
+                }
+            }
 
             GameState.Get.OldMouse = GameState.Get.CurrentMouse;
             base.Update(gameTime);
         }
+
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
-            
+
+            TestButton.Draw(spriteBatch);
+
+            MouseSprite.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);
         }
