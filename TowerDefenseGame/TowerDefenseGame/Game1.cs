@@ -17,6 +17,7 @@ namespace TowerDefenseGame
         Sprite MouseSprite;
         Vector2 MouseOffset;
 
+        Label TestLabel;
         Button TestButton;
         bool SoundOn;
         Texture2D soundOn;
@@ -68,8 +69,10 @@ namespace TowerDefenseGame
             rect.X = 300;
             rect.Y = 300;
 
-            TestButton = new Button(rect, soundOn, 1f, 0.9f, null, "");
+            TestButton = new Button(rect, soundOn, Color.Black, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This is a long sentence");
             SoundOn = true;
+
+            TestLabel = new Label(soundOn, new Vector2(300, 100), Color.Black, 2f, TestButton.Font, "This is a label");
 
             Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
             Animation animation = new Animation();
@@ -120,6 +123,7 @@ namespace TowerDefenseGame
             spriteBatch.Begin();
 
             TestButton.Draw(spriteBatch);
+            TestLabel.Draw(spriteBatch);
 
             MouseSprite.Draw(spriteBatch);
             spriteBatch.End();
