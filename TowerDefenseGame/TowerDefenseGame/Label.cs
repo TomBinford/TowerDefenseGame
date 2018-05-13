@@ -23,13 +23,19 @@ namespace TowerDefenseGame
 
         public override void Draw(SpriteBatch spriteBatch)
         {
+            float total = 0;
             if (Texture != null)
             {
                 spriteBatch.Draw(Texture, Position, null, Color.White, Angle, Origin, Scale, Effect, 0);
             }
             if (Text != "" && Font != null)
             {
-                spriteBatch.DrawString(Font, Text, new Vector2(Position.X - (Font.MeasureString(Text).X / 2), Position.Y), Tint, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+                string[] split = Text.Split('\n');
+                for (int i = 0; i < split.Length; i++)
+                {
+                    spriteBatch.DrawString(Font, split[i], new Vector2(Position.X - (Font.MeasureString(split[i]).X / 2), Position.Y + total), Tint, 0f, Vector2.Zero, Scale, SpriteEffects.None, 0f);
+                    total += Font.MeasureString(split[i]).Y;
+                }
             }
         }
     }

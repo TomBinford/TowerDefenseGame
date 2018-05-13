@@ -16,8 +16,7 @@ namespace TowerDefenseGame
         
         Sprite MouseSprite;
         Vector2 MouseOffset;
-
-        Label TestLabel;
+        
         Button TestButton;
         bool SoundOn;
         Texture2D soundOn;
@@ -69,11 +68,9 @@ namespace TowerDefenseGame
             rect.X = 300;
             rect.Y = 300;
 
-            TestButton = new Button(rect, soundOn, Color.Black, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This is a long sentence");
+            TestButton = new Button(rect, null, Color.Black, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This \n is uneven");
             SoundOn = true;
-
-            TestLabel = new Label(soundOn, new Vector2(300, 100), Color.Black, 2f, TestButton.Font, "This is a label");
-
+            
             Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
             Animation animation = new Animation();
             //animation.AddFrame(Content.Load<Texture2D>(""));
@@ -99,7 +96,7 @@ namespace TowerDefenseGame
             {
                 MouseSprite.Scale = 0.5f;
             }
-
+            
             if (TestButton.IsClicked(GameState.Get.CurrentMouse) && !TestButton.IsClicked(GameState.Get.OldMouse))
             {
                 SoundOn = !SoundOn;
@@ -112,7 +109,7 @@ namespace TowerDefenseGame
                     TestButton.Texture = soundOff;
                 }
             }
-
+            
             GameState.Get.OldMouse = GameState.Get.CurrentMouse;
             base.Update(gameTime);
         }
@@ -121,9 +118,8 @@ namespace TowerDefenseGame
         {
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
-
+            
             TestButton.Draw(spriteBatch);
-            TestLabel.Draw(spriteBatch);
 
             MouseSprite.Draw(spriteBatch);
             spriteBatch.End();
