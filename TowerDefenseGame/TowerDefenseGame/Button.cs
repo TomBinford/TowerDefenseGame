@@ -31,7 +31,7 @@ namespace TowerDefenseGame
             }
         }
         
-        public Button(Rectangle hitbox, Texture2D background, Color tint, float normalScale, float clickedScale, SpriteFont font, string text)
+        public Button(Rectangle hitbox, Texture2D background, Color tint, float normalScale, float clickedScale, SpriteFont font = null, string text = "")
             : base(background, hitbox.Center.ToVector2(), tint, normalScale, font, text)
         {
             Hitbox = hitbox;

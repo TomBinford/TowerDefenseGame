@@ -68,7 +68,7 @@ namespace TowerDefenseGame
             rect.X = 300;
             rect.Y = 300;
 
-            TestButton = new Button(rect, null, Color.Black, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This \n is uneven");
+            TestButton = new Button(rect, soundOn, Color.White, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This \n is uneven");
             SoundOn = true;
             
             Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();

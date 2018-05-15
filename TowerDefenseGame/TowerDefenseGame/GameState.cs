@@ -19,6 +19,9 @@ namespace TowerDefenseGame
         public LinkedList<Sprite> ProjectilePositions;
 
         public ulong Money;
+
+        public bool SoundOn;
+        public bool MusicOn;
         
         private static GameState state = new GameState();
         private GameState()
