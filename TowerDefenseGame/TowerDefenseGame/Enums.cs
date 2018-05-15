@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,5 +49,22 @@ namespace TowerDefenseGame
         Archer,
         Magic,
         Stone
+    }
+
+    public enum ScreenTypes
+    {
+        Main,
+        LevelSelect,
+        Battle,
+        Settings,
+        None
+    }
+
+    public static class Functions
+    {
+        public Rectangle Scale(this Rectangle rect, float scale)
+        {
+            return new Rectangle(rect.Location, new Point((int)(rect.Width * scale), (int)(rect.Height * scale)));
+        }
     }
 }

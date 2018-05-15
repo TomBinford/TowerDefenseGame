@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SpriteLibrary;
 using System;
@@ -13,7 +14,9 @@ namespace TowerDefenseGame
     {
         public MouseState CurrentMouse;
         public MouseState OldMouse;
-        
+
+        public Viewport ScreenViewport;
+
         public LinkedList<Enemy> Enemies;
         public LinkedList<Soldier> Soldiers;
         public LinkedList<Sprite> ProjectilePositions;

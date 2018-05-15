@@ -17,11 +17,6 @@ namespace TowerDefenseGame
         Sprite MouseSprite;
         Vector2 MouseOffset;
         
-        Button TestButton;
-        bool SoundOn;
-        Texture2D soundOn;
-        Texture2D soundOff;
-
         List<Tower> towers;
         
         Random random = new Random();
@@ -50,6 +45,7 @@ namespace TowerDefenseGame
         protected override void Initialize()
         {
             IsMouseVisible = false;
+            GameState.Get.ScreenViewport = GraphicsDevice.Viewport;
             base.Initialize();
         }
 
@@ -61,15 +57,7 @@ namespace TowerDefenseGame
             MouseOffset.Y = (MouseSprite.Texture.Height / -2) + 6;
             MouseOffset.X = -4;
 
-            soundOff = Content.Load<Texture2D>("GUI/SoundOff");
-            soundOn = Content.Load<Texture2D>("GUI/SoundOn");
-
-            Rectangle rect = soundOn.Bounds;
-            rect.X = 300;
-            rect.Y = 300;
-
-            TestButton = new Button(rect, soundOn, Color.White, 1f, 0.9f, Content.Load<SpriteFont>("Font"), "This \n is uneven");
-            SoundOn = true;
+            ScreenManager.Load(Content, ScreenTypes.Settings);
             
             Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
             Animation animation = new Animation();
@@ -96,19 +84,8 @@ namespace TowerDefenseGame
             {
                 MouseSprite.Scale = 0.5f;
             }
-            
-            if (TestButton.IsClicked(GameState.Get.CurrentMouse) && !TestButton.IsClicked(GameState.Get.OldMouse))
-            {
-                SoundOn = !SoundOn;
-                if (SoundOn)
-                {
-                    TestButton.Texture = soundOn;
-                }
-                else
-                {
-                    TestButton.Texture = soundOff;
-                }
-            }
+
+            ScreenManager.Update(gameTime);
             
             GameState.Get.OldMouse = GameState.Get.CurrentMouse;
             base.Update(gameTime);
@@ -118,9 +95,7 @@ namespace TowerDefenseGame
         {
             GraphicsDevice.Clear(Color.White);
             spriteBatch.Begin();
-            
-            TestButton.Draw(spriteBatch);
-
+            ScreenManager.Draw(spriteBatch);
             MouseSprite.Draw(spriteBatch);
             spriteBatch.End();
             base.Draw(gameTime);

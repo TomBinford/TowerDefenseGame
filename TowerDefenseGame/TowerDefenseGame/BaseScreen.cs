@@ -12,7 +12,7 @@ namespace TowerDefenseGame
 {
     public abstract class BaseScreen
     {
-        public BaseScreen PreviousScreen;
+        public ScreenTypes PreviousScreen;
 
         public BaseScreen()
         {
@@ -20,7 +20,7 @@ namespace TowerDefenseGame
 
         public abstract void Load(ContentManager Content);
 
-        public abstract void Update(GameTime gameTime);
+        public abstract ScreenTypes Update(GameTime gameTime);
 
         public abstract void Draw(SpriteBatch batch);
     }

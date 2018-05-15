@@ -12,99 +12,41 @@ namespace TowerDefenseGame
 {
     public class MainMenuScreen : BaseScreen
     {
-        Button settingsButton;
-        private SettingsScreen settings;
-        public SettingsScreen Settings
+        Button SettingsButton;
+
+        Button StartButton;
+        
+        Sprite Background;
+
+        public override ScreenTypes Update(GameTime gameTime)
         {
-            get
+            if (SettingsButton.IsClicked(GameState.Get.CurrentMouse))
             {
-                return settings;
+                return ScreenTypes.Settings;
             }
-            set
+            if (StartButton.IsClicked(GameState.Get.CurrentMouse))
             {
-                settings = value;
-                settings.PreviousScreen = this;
+                return ScreenTypes.LevelSelect;
             }
-        }
-
-        Button startButton;
-
-        Button SoundButton;
-        Button MusicButton;
-
-        Texture2D SoundOn;
-        Texture2D SoundOff;
-
-        Texture2D MusicOn;
-        Texture2D MusicOff;
-
-        Sprite background;
-
-        public override void Update(GameTime gameTime)
-        {
-            if (settingsButton.IsClicked(GameState.Get.CurrentMouse))
-            {
-                ScreenManager.ActiveScreen = Settings;
-            }
-
-            if (SoundButton.IsClicked(GameState.Get.CurrentMouse) && !SoundButton.IsClicked(GameState.Get.OldMouse))
-            {
-                GameState.Get.SoundOn = !GameState.Get.SoundOn;
-                if (GameState.Get.SoundOn)
-                {
-                    SoundButton.Texture = SoundOn;
-                }
-                else
-                {
-                    SoundButton.Texture = SoundOff;
-                }
-            }
-
-            if (MusicButton.IsClicked(GameState.Get.CurrentMouse) && !MusicButton.IsClicked(GameState.Get.OldMouse))
-            {
-                GameState.Get.MusicOn = !GameState.Get.MusicOn;
-                if (GameState.Get.MusicOn)
-                {
-                    MusicButton.Texture = MusicOn;
-                }
-                else
-                {
-                    MusicButton.Texture = MusicOff;
-                }
-            }
+            return ScreenTypes.None;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            background.Draw(spriteBatch);
-            SoundButton.Draw(spriteBatch);
-            MusicButton.Draw(spriteBatch);
-            Settings.Draw(spriteBatch);
+            Background.Draw(spriteBatch);
+            SettingsButton.Draw(spriteBatch);
         }
 
         public override void Load(ContentManager Content)
         {
-            background = new Sprite(Content.Load<Texture2D>("Backgrounds/Cemetery"), Vector2.Zero, Color.White);
-            SoundOn = Content.Load<Texture2D>("GUI/SoundOn");
-            SoundOff = Content.Load<Texture2D>("GUI/SoundOff");
-            MusicOn = Content.Load<Texture2D>("GUI/MusicOn");
-            MusicOff = Content.Load<Texture2D>("GUI/MusicOff");
+            Background = new Sprite(Content.Load<Texture2D>("Backgrounds/Cemetery"), Vector2.Zero, Color.White, 0f, 1f);
 
-            Rectangle bounds = SoundOn.Bounds;
-            bounds.X = 100;
-            bounds.Y = 20;
-            SoundButton = new Button(bounds, SoundOn, Color.White, 1f, 0.9f);
-
-            bounds = MusicOn.Bounds;
-            bounds.X = 200;
-            bounds.Y = 20;
-            MusicButton = new Button(bounds, MusicOn, Color.White, 1f, 0.9f);
-
+            Rectangle bounds;
             Texture2D settings = Content.Load<Texture2D>("GUI/Settings");
             bounds = settings.Bounds;
             bounds.X = 500;
             bounds.Y = 20;
-            settingsButton = new Button(bounds, settings, Color.White, 1f, 1f);
+            SettingsButton = new Button(bounds, settings, Color.White, 1f, 1f);
         }
     }
 }

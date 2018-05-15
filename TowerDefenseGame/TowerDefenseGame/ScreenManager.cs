@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,44 +9,35 @@ using System.Threading.Tasks;
 
 namespace TowerDefenseGame
 {
-    static class ScreenManager
+    public static class ScreenManager
     {
-        private static List<BaseScreen> screens;
-        private static BaseScreen activeScreen = new MainMenuScreen();
+        private static ScreenTypes currentScreen;
 
-        public static void Load(ContentManager Content)
+        private static Dictionary<ScreenTypes, BaseScreen> Screens = new Dictionary<ScreenTypes, BaseScreen>()
         {
-            foreach(BaseScreen screen in screens)
+            [ScreenTypes.Settings] = new SettingsScreen()
+        };
+        
+        public static void Load(ContentManager Content, ScreenTypes startingScreen)
+        {
+            foreach (var c in Screens)
             {
-                screen.Load(Content);
+                c.Value.Load(Content);
             }
+            currentScreen = startingScreen;
         }
-
-        public static BaseScreen ActiveScreen
+        
+        public static void Draw(SpriteBatch spriteBatch)
         {
-            get
-            {
-                return activeScreen;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    throw new NullReferenceException("Active screen may not be set to null");
-                }
-                activeScreen = value;
-            }
+            Screens[currentScreen].Draw(spriteBatch);
         }
 
         public static void Update(GameTime gameTime)
         {
-            if (activeScreen != null)
+            ScreenTypes returnValue = Screens[currentScreen].Update(gameTime);
+            if(returnValue != ScreenTypes.None)
             {
-                activeScreen.Update(gameTime);
-            }
-            else
-            {
-                throw new NullReferenceException("Active screen not set");
+                currentScreen = returnValue;
             }
         }
     }
