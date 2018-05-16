@@ -15,7 +15,8 @@ namespace TowerDefenseGame
 
         private static Dictionary<ScreenTypes, BaseScreen> Screens = new Dictionary<ScreenTypes, BaseScreen>()
         {
-            [ScreenTypes.Settings] = new SettingsScreen()
+            [ScreenTypes.Settings] = new SettingsScreen(ScreenTypes.Main),
+            [ScreenTypes.Main] = new MainMenuScreen()
         };
         
         public static void Load(ContentManager Content, ScreenTypes startingScreen)
@@ -37,6 +38,7 @@ namespace TowerDefenseGame
             ScreenTypes returnValue = Screens[currentScreen].Update(gameTime);
             if(returnValue != ScreenTypes.None)
             {
+                Screens[ScreenTypes.Settings].PreviousScreen = currentScreen;
                 currentScreen = returnValue;
             }
         }

@@ -39,14 +39,15 @@ namespace TowerDefenseGame
 
         public override void Load(ContentManager Content)
         {
-            Background = new Sprite(Content.Load<Texture2D>("Backgrounds/Cemetery"), Vector2.Zero, Color.White, 0f, 1f);
-
+            Texture2D cemetery = Content.Load<Texture2D>("Backgrounds/Cemetery");
+            Background = new Sprite(cemetery, GameState.Get.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)cemetery.Height, GameState.Get.ScreenViewport.Width / (float)cemetery.Width));
+            
             Rectangle bounds;
-            Texture2D settings = Content.Load<Texture2D>("GUI/Settings");
+            Texture2D settings = Content.Load<Texture2D>("GUI/Settings/Settings");
             bounds = settings.Bounds;
-            bounds.X = 500;
+            bounds.X = 100;
             bounds.Y = 20;
-            SettingsButton = new Button(bounds, settings, Color.White, 1f, 1f);
+            SettingsButton = new Button(bounds, settings, Color.White, 1f, 0.5f);
         }
     }
 }

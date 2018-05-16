@@ -128,7 +128,7 @@
 /processorParam:TextureFormat=Compressed
 /build:Font.spritefont
 
-#begin GUI/MusicOff.png
+#begin GUI/Settings/MusicOff.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -138,9 +138,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/MusicOff.png
+/build:GUI/Settings/MusicOff.png
 
-#begin GUI/MusicOn.png
+#begin GUI/Settings/MusicOn.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -150,9 +150,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/MusicOn.png
+/build:GUI/Settings/MusicOn.png
 
-#begin GUI/SoundOn.png
+#begin GUI/Settings/SoundOff.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -162,9 +162,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/SoundOn.png
+/build:GUI/Settings/SoundOff.png
 
-#begin GUI/SoundOff.png
+#begin GUI/Settings/SoundOn.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -174,9 +174,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/SoundOff.png
+/build:GUI/Settings/SoundOn.png
 
-#begin GUI/Settings.png
+#begin GUI/Settings/Settings.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -186,9 +186,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/Settings.png
+/build:GUI/Settings/Settings.png
 
-#begin GUI/CloseButton.png
+#begin GUI/Settings/CloseButton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -198,5 +198,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:GUI/CloseButton.png
+/build:GUI/Settings/CloseButton.png
+
+#begin GUI/Settings/Table.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GUI/Settings/Table.png
 

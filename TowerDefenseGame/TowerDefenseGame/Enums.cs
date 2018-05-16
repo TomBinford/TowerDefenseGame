@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,9 +63,14 @@ namespace TowerDefenseGame
 
     public static class Functions
     {
-        public Rectangle Scale(this Rectangle rect, float scale)
+        public static Rectangle Scale(this Rectangle rect, float scale)
         {
             return new Rectangle(rect.Location, new Point((int)(rect.Width * scale), (int)(rect.Height * scale)));
+        }
+
+        public static Vector2 GetCenter(this Viewport viewport)
+        {
+            return new Vector2(viewport.X + viewport.Width / 2f, viewport.Y + viewport.Height / 2f);
         }
     }
 }

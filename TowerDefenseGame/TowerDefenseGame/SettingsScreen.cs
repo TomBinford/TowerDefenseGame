@@ -22,6 +22,13 @@ namespace TowerDefenseGame
         Texture2D MusicOn;
         Texture2D MusicOff;
 
+        Sprite Table;
+
+        public SettingsScreen(ScreenTypes previous)
+        {
+            PreviousScreen = previous;
+        }
+
         public override ScreenTypes Update(GameTime gameTime)
         {
             if (SoundButton.IsClicked(GameState.Get.CurrentMouse) && !SoundButton.IsClicked(GameState.Get.OldMouse))
@@ -36,7 +43,7 @@ namespace TowerDefenseGame
 
             if (BackButton.IsClicked(GameState.Get.CurrentMouse))
             {
-                return PreviousScreen;
+                //return PreviousScreen;
             }
 
             return ScreenTypes.None;
@@ -45,6 +52,7 @@ namespace TowerDefenseGame
         public override void Draw(SpriteBatch spriteBatch)
         {
             Background.Draw(spriteBatch);
+            Table.Draw(spriteBatch);
             BackButton.Draw(spriteBatch);
             MusicButton.Draw(spriteBatch);
             SoundButton.Draw(spriteBatch);
@@ -53,10 +61,10 @@ namespace TowerDefenseGame
         public override void Load(ContentManager Content)
         {
             Rectangle bounds;
-            SoundOn = Content.Load<Texture2D>("GUI/SoundOn");
-            SoundOff = Content.Load<Texture2D>("GUI/SoundOff");
-            MusicOn = Content.Load<Texture2D>("GUI/MusicOn");
-            MusicOff = Content.Load<Texture2D>("GUI/MusicOff");
+            SoundOn = Content.Load<Texture2D>("GUI/Settings/SoundOn");
+            SoundOff = Content.Load<Texture2D>("GUI/Settings/SoundOff");
+            MusicOn = Content.Load<Texture2D>("GUI/Settings/MusicOn");
+            MusicOff = Content.Load<Texture2D>("GUI/Settings/MusicOff");
             bounds = SoundOn.Bounds;
             bounds.X = 500;
             bounds.Y = 20;
@@ -67,13 +75,15 @@ namespace TowerDefenseGame
             bounds.Y = 20;
             MusicButton = new Button(bounds, MusicOn, Color.White, 1f, 0.9f);
 
-            bounds = Content.Load<Texture2D>("GUI/CloseButton").Bounds;
-            bounds.X = 300;
+            bounds = Content.Load<Texture2D>("GUI/Settings/CloseButton").Bounds;
+            bounds.X = 100;
             bounds.Y = 20;
-            
-            BackButton = new Button(bounds, Content.Load<Texture2D>("GUI/CloseButton"), Color.White, 1f, 0.9f);
+            BackButton = new Button(bounds, Content.Load<Texture2D>("GUI/Settings/CloseButton"), Color.White, 1f, 0.9f);
+
             Texture2D cemetery = Content.Load<Texture2D>("Backgrounds/Cemetery");
-            Background = new Sprite(cemetery, GameState.Get.ScreenViewport.Bounds.Center.ToVector2(), Color.White, 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)cemetery.Height, GameState.Get.ScreenViewport.Width / (float)cemetery.Width));
+            Background = new Sprite(cemetery, GameState.Get.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)cemetery.Height, GameState.Get.ScreenViewport.Width / (float)cemetery.Width));
+            
+            Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.Get.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
         }
     }
 }

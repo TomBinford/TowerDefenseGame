@@ -12,11 +12,11 @@ namespace TowerDefenseGame
 {
     public abstract class BaseScreen
     {
-        public ScreenTypes PreviousScreen;
-
         public BaseScreen()
         {
         }
+
+        public ScreenTypes PreviousScreen;
 
         public abstract void Load(ContentManager Content);
 
