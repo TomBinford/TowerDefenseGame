@@ -20,6 +20,8 @@ namespace TowerDefenseGame
 
         public abstract void Load(ContentManager Content);
 
+        public abstract void UpdatePositions();
+
         public abstract ScreenTypes Update(GameTime gameTime);
 
         public abstract void Draw(SpriteBatch batch);

@@ -31,6 +31,11 @@ namespace TowerDefenseGame
             return ScreenTypes.None;
         }
 
+        public override void UpdatePositions()
+        {
+
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             Background.Draw(spriteBatch);

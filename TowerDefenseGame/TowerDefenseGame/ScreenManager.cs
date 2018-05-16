@@ -27,6 +27,14 @@ namespace TowerDefenseGame
             }
             currentScreen = startingScreen;
         }
+
+        public static void UpdatePositions()
+        {
+            foreach (var c in Screens)
+            {
+                c.Value.UpdatePositions();
+            }
+        }
         
         public static void Draw(SpriteBatch spriteBatch)
         {
