@@ -107,6 +107,7 @@ namespace TowerDefenseGame
         {
             Table.Position = GameState.Get.ScreenViewport.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
+            Window1.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + (Table.Texture.Height / 2.5f));
             CloseButton.Position = CloseButton.Hitbox.Location.ToVector2();
             CloseButton.Hitbox = new Rectangle(new Point((int)Table.Position.X + (int)(Table.Texture.Width / 2.4f), (int)Table.Position.Y - (int)(Table.Texture.Height / 1.8f)), CloseButton.Hitbox.Size);
         }
