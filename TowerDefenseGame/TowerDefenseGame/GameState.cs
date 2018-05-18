@@ -25,6 +25,7 @@ namespace TowerDefenseGame
 
         public bool SoundOn;
         public bool MusicOn;
+        public bool VibrationOn;
         
         private static GameState state = new GameState();
         private GameState()

@@ -121,13 +121,6 @@
 /processorParam:TextureFormat=Color
 /build:Backgrounds/Village.png
 
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
-
 #begin GUI/Settings/MusicOff.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -235,4 +228,35 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GUI/Settings/Table1.png
+
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
+
+#begin GUI/Settings/ButtonOn.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GUI/Settings/ButtonOn.png
+
+#begin GUI/Settings/ButtonOff.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:GUI/Settings/ButtonOff.png
 
