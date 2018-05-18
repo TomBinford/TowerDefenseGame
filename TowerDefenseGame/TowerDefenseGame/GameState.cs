@@ -26,6 +26,7 @@ namespace TowerDefenseGame
         public bool SoundOn;
         public bool MusicOn;
         public bool VibrationOn;
+        public bool NotificationOn;
         
         private static GameState state = new GameState();
         private GameState()
@@ -34,6 +35,10 @@ namespace TowerDefenseGame
             Enemies = new LinkedList<Enemy>();
             Soldiers = new LinkedList<Soldier>();
             ProjectilePositions = new LinkedList<Sprite>();
+            SoundOn = true;
+            MusicOn = true;
+            VibrationOn = true;
+            NotificationOn = true;
         }
 
         public static GameState Get

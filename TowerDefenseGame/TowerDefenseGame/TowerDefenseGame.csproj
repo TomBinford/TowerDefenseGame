@@ -51,6 +51,7 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameState.cs" />
     <Compile Include="Label.cs" />
+    <Compile Include="LevelSelectScreen.cs" />
     <Compile Include="MainMenuScreen.cs" />
     <Compile Include="SettingsScreen.cs" />
     <Compile Include="Program.cs" />

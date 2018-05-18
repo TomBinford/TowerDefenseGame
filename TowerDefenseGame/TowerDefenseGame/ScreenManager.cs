@@ -15,17 +15,18 @@ namespace TowerDefenseGame
 
         private static Dictionary<ScreenTypes, BaseScreen> Screens = new Dictionary<ScreenTypes, BaseScreen>()
         {
-            [ScreenTypes.Settings] = new SettingsScreen(ScreenTypes.Main),
-            [ScreenTypes.Main] = new MainMenuScreen()
+            [ScreenTypes.Settings] = new SettingsScreen(),
+            [ScreenTypes.Main] = new MainMenuScreen(),
+            [ScreenTypes.LevelSelect] = new LevelSelectScreen()
         };
         
-        public static void Load(ContentManager Content, ScreenTypes startingScreen)
+        public static void Load(ContentManager Content)
         {
             foreach (var c in Screens)
             {
                 c.Value.Load(Content);
             }
-            currentScreen = startingScreen;
+            currentScreen = ScreenTypes.Main;
         }
 
         public static void UpdatePositions()
@@ -48,6 +49,7 @@ namespace TowerDefenseGame
             {
                 Screens[ScreenTypes.Settings].PreviousScreen = currentScreen;
                 currentScreen = returnValue;
+                Screens[currentScreen].GetFocus();
             }
         }
     }

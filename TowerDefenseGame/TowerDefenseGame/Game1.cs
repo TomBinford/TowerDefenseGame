@@ -14,14 +14,14 @@ namespace TowerDefenseGame
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+
         Sprite MouseSprite;
         Vector2 MouseOffset;
-        
+
         List<Tower> towers;
-        
+
         Random random = new Random();
-        
+
         public Color[,] GetColors(Texture2D texture)
         {
             Color[] colors = new Color[texture.Height * texture.Width];
@@ -66,7 +66,7 @@ namespace TowerDefenseGame
             graphics.PreferredBackBufferWidth = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1920 : owningForm.ClientRectangle.Width;
             graphics.PreferredBackBufferHeight = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1080 : owningForm.ClientRectangle.Height;
             graphics.ApplyChanges();
-            
+
             GameState.Get.ScreenViewport = GraphicsDevice.Viewport;
             ScreenManager.UpdatePositions();
         }
@@ -79,8 +79,8 @@ namespace TowerDefenseGame
             MouseOffset.Y = (MouseSprite.Texture.Height / -2) + 6;
             MouseOffset.X = -4;
 
-            ScreenManager.Load(Content, ScreenTypes.Settings);
-            
+            ScreenManager.Load(Content);
+
             Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
             Animation animation = new Animation();
             //animation.AddFrame(Content.Load<Texture2D>(""));
@@ -98,7 +98,7 @@ namespace TowerDefenseGame
         {
             GameState.Get.CurrentMouse = Mouse.GetState();
             MouseSprite.Position = GameState.Get.CurrentMouse.Position.ToVector2() - MouseOffset;
-            
+
             if (GameState.Get.CurrentMouse.LeftButton == ButtonState.Pressed)
             {
                 MouseSprite.Scale = 0.4f;
@@ -109,7 +109,7 @@ namespace TowerDefenseGame
             }
 
             ScreenManager.Update(gameTime);
-            
+
             GameState.Get.OldMouse = GameState.Get.CurrentMouse;
             base.Update(gameTime);
         }
