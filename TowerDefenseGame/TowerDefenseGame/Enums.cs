@@ -29,6 +29,13 @@ namespace TowerDefenseGame
         Goblin
     }
 
+    public enum Difficulties
+    {
+        Easy,
+        Normal,
+        Hard
+    }
+
     public enum UnitStates
     {
         Walking,
@@ -55,6 +62,7 @@ namespace TowerDefenseGame
     public enum ScreenTypes
     {
         Main,
+        DifficultySelect,
         LevelSelect,
         Battle,
         Settings,

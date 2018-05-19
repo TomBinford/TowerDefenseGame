@@ -21,6 +21,8 @@ namespace TowerDefenseGame
         public LinkedList<Soldier> Soldiers;
         public LinkedList<Sprite> ProjectilePositions;
 
+        public Difficulties Difficulty;
+
         public ulong Money;
 
         public bool SoundOn;

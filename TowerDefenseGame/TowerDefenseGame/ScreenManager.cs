@@ -17,9 +17,10 @@ namespace TowerDefenseGame
         {
             [ScreenTypes.Settings] = new SettingsScreen(),
             [ScreenTypes.Main] = new MainMenuScreen(),
-            [ScreenTypes.LevelSelect] = new LevelSelectScreen()
+            [ScreenTypes.LevelSelect] = new LevelSelectScreen(),
+            [ScreenTypes.DifficultySelect] = new DifficultySelectScreen()
         };
-        
+
         public static void Load(ContentManager Content)
         {
             foreach (var c in Screens)
@@ -36,7 +37,7 @@ namespace TowerDefenseGame
                 c.Value.UpdatePositions();
             }
         }
-        
+
         public static void Draw(SpriteBatch spriteBatch)
         {
             Screens[currentScreen].Draw(spriteBatch);
@@ -45,7 +46,7 @@ namespace TowerDefenseGame
         public static void Update(GameTime gameTime)
         {
             ScreenTypes returnValue = Screens[currentScreen].Update(gameTime);
-            if(returnValue != ScreenTypes.None)
+            if (returnValue != ScreenTypes.None)
             {
                 Screens[ScreenTypes.Settings].PreviousScreen = currentScreen;
                 currentScreen = returnValue;

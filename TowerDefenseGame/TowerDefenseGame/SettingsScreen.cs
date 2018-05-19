@@ -21,7 +21,7 @@ namespace TowerDefenseGame
         Sprite Background;
 
         Sprite Table;
-        Sprite Window1;
+        Sprite Window;
         Sprite Header;
 
         Label MusicLabel;
@@ -34,31 +34,31 @@ namespace TowerDefenseGame
         
         public override ScreenTypes Update(GameTime gameTime)
         {
-            if (SoundButton.IsClicked(GameState.Get.CurrentMouse) && !SoundButton.IsClicked(GameState.Get.OldMouse))
+            if (SoundButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.SoundOn = !GameState.Get.SoundOn;
                 SoundButton.Texture = GameState.Get.SoundOn ? On : Off;
             }
-
-            if (MusicButton.IsClicked(GameState.Get.CurrentMouse) && !MusicButton.IsClicked(GameState.Get.OldMouse))
+            
+            if (MusicButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.MusicOn = !GameState.Get.MusicOn;
                 MusicButton.Texture = GameState.Get.MusicOn ? On : Off;
             }
 
-            if (VibrationButton.IsClicked(GameState.Get.CurrentMouse) && !VibrationButton.IsClicked(GameState.Get.OldMouse))
+            if (VibrationButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.VibrationOn = !GameState.Get.VibrationOn;
                 VibrationButton.Texture = GameState.Get.VibrationOn ? On : Off;
             }
 
-            if (NotificationButton.IsClicked(GameState.Get.CurrentMouse) && !NotificationButton.IsClicked(GameState.Get.OldMouse))
+            if (NotificationButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.NotificationOn = !GameState.Get.NotificationOn;
                 NotificationButton.Texture = GameState.Get.NotificationOn ? On : Off;
             }
             
-            if (CloseButton.IsClicked(GameState.Get.CurrentMouse) && !CloseButton.IsClicked(GameState.Get.OldMouse))
+            if (CloseButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 return PreviousScreen;
             }
@@ -70,7 +70,7 @@ namespace TowerDefenseGame
         {
             Background.Draw(spriteBatch);
             Table.Draw(spriteBatch);
-            Window1.Draw(spriteBatch);
+            Window.Draw(spriteBatch);
             Header.Draw(spriteBatch);
             CloseButton.Draw(spriteBatch);
             MusicLabel.Draw(spriteBatch);
@@ -101,7 +101,7 @@ namespace TowerDefenseGame
 
             Header = new Sprite(Content.Load<Texture2D>("GUI/Settings/Header"), new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f)), Color.White, 0, Background.Scale);
 
-            Window1 = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table1"), new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + Table.Texture.Height / 25f), Color.White, 0, Background.Scale);
+            Window = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table1"), new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + Table.Texture.Height / 25f), Color.White, 0, Background.Scale);
 
             bounds = Content.Load<Texture2D>("GUI/Settings/CloseButton").Bounds;
             bounds.X = (int)Table.Position.X + (int)(Table.Texture.Width / 2.4f);
@@ -138,7 +138,7 @@ namespace TowerDefenseGame
         {
             Table.Position = GameState.Get.ScreenViewport.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
-            Window1.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + (Table.Texture.Height / 25f));
+            Window.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + (Table.Texture.Height / 25f));
             MusicLabel.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 3f), Table.Position.Y - (Table.Texture.Height / 5f));
             SoundLabel.Position = new Vector2(MusicLabel.Position.X, MusicLabel.Position.Y + (On.Height * 1f));
             VibrationLabel.Position = new Vector2(SoundLabel.Position.X, SoundLabel.Position.Y + (On.Height * 1f));

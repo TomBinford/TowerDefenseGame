@@ -44,7 +44,7 @@ namespace TowerDefenseGame
             return Hitbox.Contains(State.Position);
         }
 
-        public bool IsClicked(MouseState State)
+        public bool IsPressed(MouseState State)
         {
             if (IsMousedOver(State) && (State.LeftButton == ButtonState.Pressed))
             {
@@ -56,6 +56,11 @@ namespace TowerDefenseGame
                 Scale = NormalScale;
                 return false;
             }
+        }
+
+        public bool IsClicked(MouseState newState, MouseState oldState)
+        {
+            return IsPressed(GameState.Get.CurrentMouse) && !IsPressed(GameState.Get.OldMouse) && IsMousedOver(GameState.Get.OldMouse);
         }
     }
 }

@@ -46,6 +46,7 @@
     <Compile Include="BaseScreen.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="CircularHitbox.cs" />
+    <Compile Include="DifficultySelectScreen.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Game1.cs" />

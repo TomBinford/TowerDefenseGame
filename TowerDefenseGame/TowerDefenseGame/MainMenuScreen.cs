@@ -26,23 +26,23 @@ namespace TowerDefenseGame
 
         public override ScreenTypes Update(GameTime gameTime)
         {
-            if (SettingsButton.IsClicked(GameState.Get.CurrentMouse) && !SettingsButton.IsClicked(GameState.Get.OldMouse))
+            if (SettingsButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 return ScreenTypes.Settings;
             }
-            if (SoundButton.IsClicked(GameState.Get.CurrentMouse) && !SoundButton.IsClicked(GameState.Get.OldMouse))
+            if (SoundButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.SoundOn = !GameState.Get.SoundOn;
                 SoundButton.Texture = GameState.Get.SoundOn ? SoundOn : SoundOff;
             }
-            if (MusicButton.IsClicked(GameState.Get.CurrentMouse) && !MusicButton.IsClicked(GameState.Get.OldMouse))
+            if (MusicButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
                 GameState.Get.MusicOn = !GameState.Get.MusicOn;
                 MusicButton.Texture = GameState.Get.MusicOn ? MusicOn : MusicOff;
             }
-            if (StartButton.IsClicked(GameState.Get.CurrentMouse) && !StartButton.IsClicked(GameState.Get.OldMouse))
+            if (StartButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
-                return ScreenTypes.LevelSelect;
+                return ScreenTypes.DifficultySelect;
             }
             return ScreenTypes.None;
         }
