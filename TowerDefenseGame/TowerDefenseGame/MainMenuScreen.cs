@@ -42,7 +42,7 @@ namespace TowerDefenseGame
             }
             if (StartButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
             {
-                return ScreenTypes.DifficultySelect;
+                return ScreenTypes.LevelSelect;
             }
             return ScreenTypes.None;
         }
@@ -58,11 +58,11 @@ namespace TowerDefenseGame
 
         public override void Load(ContentManager Content)
         {
-            Texture2D back = Content.Load<Texture2D>("Backgrounds/Jungle");
-            Background = new Sprite(back, GameState.Get.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)back.Height, GameState.Get.ScreenViewport.Width / (float)back.Width));
+            Texture2D texture = Content.Load<Texture2D>("Backgrounds/Jungle");
+            Background = new Sprite(texture, GameState.Get.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)texture.Height, GameState.Get.ScreenViewport.Width / (float)texture.Width));
 
             Rectangle bounds;
-            Texture2D texture = Content.Load<Texture2D>("GUI/Main/Settings");
+            texture = Content.Load<Texture2D>("GUI/Main/Settings");
 
             SoundOn = Content.Load<Texture2D>("GUI/Main/SoundOn");
             SoundOff = Content.Load<Texture2D>("GUI/Main/SoundOff");

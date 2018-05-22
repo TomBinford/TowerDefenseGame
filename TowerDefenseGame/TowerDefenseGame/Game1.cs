@@ -93,7 +93,7 @@ namespace TowerDefenseGame
             //var tower = Tower.Create<ArcherTower>(Vector2.One, null, null);
             //tower.Upgrade();
         }
-
+        
         protected override void Update(GameTime gameTime)
         {
             GameState.Get.CurrentMouse = Mouse.GetState();
