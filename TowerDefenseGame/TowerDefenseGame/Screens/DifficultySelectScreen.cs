@@ -85,6 +85,7 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
+            Background.Scale = Math.Max(GameState.Get.ScreenViewport.Height / (float)Background.Texture.Height, GameState.Get.ScreenViewport.Width / (float)Background.Texture.Width);
             Background.Position = GameState.Get.ScreenViewport.GetCenter();
             Table.Position = GameState.Get.ScreenViewport.GetCenter();
             Window.Position = GameState.Get.ScreenViewport.GetCenter();

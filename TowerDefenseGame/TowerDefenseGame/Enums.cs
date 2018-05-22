@@ -80,5 +80,22 @@ namespace TowerDefenseGame
         {
             return new Vector2(viewport.X + viewport.Width / 2f, viewport.Y + viewport.Height / 2f);
         }
+
+        public static int DigitAt(this int number, int index)
+        {
+            string s = number.ToString();
+            return int.Parse(s[index].ToString());
+        }
+        
+        public static int Length(this int number)
+        {
+            for (int i = 0; true; i++)
+            {
+                if (number % Math.Pow(10, i) == number)
+                {
+                    return i;
+                }
+            }
+        }
     }
 }

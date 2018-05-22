@@ -96,6 +96,7 @@ namespace TowerDefenseGame
         
         protected override void Update(GameTime gameTime)
         {
+            Console.WriteLine(54321.Length());
             GameState.Get.CurrentMouse = Mouse.GetState();
             MouseSprite.Position = GameState.Get.CurrentMouse.Position.ToVector2() - MouseOffset;
 
