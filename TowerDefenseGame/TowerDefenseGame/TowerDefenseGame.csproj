@@ -47,20 +47,22 @@
     <Compile Include="Drawing\Button.cs" />
     <Compile Include="CircularHitbox.cs" />
     <Compile Include="Screens\DifficultySelectScreen.cs" />
-    <Compile Include="Enemy.cs" />
+    <Compile Include="Game\Enemy.cs" />
     <Compile Include="Enums.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="GameState.cs" />
+    <Compile Include="Game\GameState.cs" />
     <Compile Include="Drawing\Label.cs" />
+    <Compile Include="Game\Level.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
     <Compile Include="Drawing\Number.cs" />
+    <Compile Include="Drawing\NumberDrawer.cs" />
     <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Screens\ScreenManager.cs" />
-    <Compile Include="Soldier.cs" />
-    <Compile Include="Tower.cs" />
+    <Compile Include="Game\Soldier.cs" />
+    <Compile Include="Game\Tower.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

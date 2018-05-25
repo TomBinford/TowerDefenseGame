@@ -42,7 +42,7 @@ namespace TowerDefenseGame
                 case UnitStates.Dying:
                     if (Animations[State].Frame == 0)
                     {
-                        GameState.Get.Enemies.Remove(this);
+                        GameState.Enemies.Remove(this);
                         return;
                     }
                     break;
@@ -70,7 +70,7 @@ namespace TowerDefenseGame
                     break;
                 case UnitStates.Idle:
                     float lowestRange = -1;
-                    var n = GameState.Get.Soldiers.First;
+                    var n = GameState.Soldiers.First;
                     while(n != null)
                     {
                         float r = Vector2.Distance(n.Value.Position, Position);

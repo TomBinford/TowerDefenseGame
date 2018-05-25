@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Media;
 using SpriteLibrary;
 using System;
 using System.Collections.Generic;
+using TowerDefenseGame.Screens;
 using WinForms = System.Windows.Forms;
 
 namespace TowerDefenseGame
@@ -52,7 +53,7 @@ namespace TowerDefenseGame
         WinForms.Form owningForm;
         protected override void Initialize()
         {
-            GameState.Get.ScreenViewport = GraphicsDevice.Viewport;
+            GameState.ScreenViewport = GraphicsDevice.Viewport;
             base.Initialize();
 
             owningForm = WinForms.Control.FromHandle(Window.Handle) as WinForms.Form;
@@ -67,7 +68,7 @@ namespace TowerDefenseGame
             graphics.PreferredBackBufferHeight = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1080 : owningForm.ClientRectangle.Height;
             graphics.ApplyChanges();
 
-            GameState.Get.ScreenViewport = GraphicsDevice.Viewport;
+            GameState.ScreenViewport = GraphicsDevice.Viewport;
             ScreenManager.UpdatePositions();
         }
 
@@ -80,12 +81,7 @@ namespace TowerDefenseGame
             MouseOffset.X = -4;
 
             ScreenManager.Load(Content);
-
-            Dictionary<UnitStates, Animation> dictionary = new Dictionary<UnitStates, Animation>();
-            Animation animation = new Animation();
-            //animation.AddFrame(Content.Load<Texture2D>(""));
-
-            dictionary.Add(UnitStates.Idle, animation);
+            NumberDrawer.Load(Content);
 
             towers = new List<Tower>();
 
@@ -97,10 +93,10 @@ namespace TowerDefenseGame
         protected override void Update(GameTime gameTime)
         {
             Console.WriteLine(54321.Length());
-            GameState.Get.CurrentMouse = Mouse.GetState();
-            MouseSprite.Position = GameState.Get.CurrentMouse.Position.ToVector2() - MouseOffset;
+            GameState.CurrentMouse = Mouse.GetState();
+            MouseSprite.Position = GameState.CurrentMouse.Position.ToVector2() - MouseOffset;
 
-            if (GameState.Get.CurrentMouse.LeftButton == ButtonState.Pressed)
+            if (GameState.CurrentMouse.LeftButton == ButtonState.Pressed)
             {
                 MouseSprite.Scale = 0.4f;
             }
@@ -111,7 +107,7 @@ namespace TowerDefenseGame
 
             ScreenManager.Update(gameTime);
 
-            GameState.Get.OldMouse = GameState.Get.CurrentMouse;
+            GameState.OldMouse = GameState.CurrentMouse;
             base.Update(gameTime);
         }
 

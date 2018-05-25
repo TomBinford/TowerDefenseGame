@@ -23,19 +23,19 @@ namespace TowerDefenseGame
 
         public override ScreenTypes Update(GameTime gameTime)
         {
-            if (EasyButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (EasyButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.Difficulty = Difficulties.Easy;
+                GameState.Difficulty = Difficulties.Easy;
                 return ScreenTypes.LevelSelect;
             }
-            if (NormalButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (NormalButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.Difficulty = Difficulties.Normal;
+                GameState.Difficulty = Difficulties.Normal;
                 return ScreenTypes.LevelSelect;
             }
-            if (HardButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (HardButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.Difficulty = Difficulties.Hard;
+                GameState.Difficulty = Difficulties.Hard;
                 return ScreenTypes.LevelSelect;
             }
             return ScreenTypes.None;
@@ -55,9 +55,9 @@ namespace TowerDefenseGame
         public override void Load(ContentManager Content)
         {
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Lava");
-            Background = new Sprite(texture, GameState.Get.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0, Math.Max(GameState.Get.ScreenViewport.Height / (float)texture.Height, GameState.Get.ScreenViewport.Width / (float)texture.Width));
+            Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
 
-            Table = new Sprite(Content.Load<Texture2D>("GUI/Difficulty/Table"), GameState.Get.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
+            Table = new Sprite(Content.Load<Texture2D>("GUI/Difficulty/Table"), GameState.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
 
             texture = Content.Load<Texture2D>("GUI/Difficulty/Header");
 
@@ -67,7 +67,7 @@ namespace TowerDefenseGame
 
             texture = Content.Load<Texture2D>("GUI/Difficulty/Easy");
             Rectangle bounds = texture.Bounds;
-            bounds.X = (int)(GameState.Get.ScreenViewport.GetCenter().X - (texture.Width / 2f));
+            bounds.X = (int)(GameState.ScreenViewport.GetCenter().X - (texture.Width / 2f));
             bounds.Y = (int)(Table.Position.Y - (texture.Height * 1.4f));
             EasyButton = new Button(bounds, texture, Color.White, 1f, 1f);
 
@@ -85,20 +85,20 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.Get.ScreenViewport.Height / (float)Background.Texture.Height, GameState.Get.ScreenViewport.Width / (float)Background.Texture.Width);
-            Background.Position = GameState.Get.ScreenViewport.GetCenter();
-            Table.Position = GameState.Get.ScreenViewport.GetCenter();
-            Window.Position = GameState.Get.ScreenViewport.GetCenter();
+            Background.Scale = Math.Max(GameState.ScreenViewport.Height / (float)Background.Texture.Height, GameState.ScreenViewport.Width / (float)Background.Texture.Width);
+            Background.Position = GameState.ScreenViewport.GetCenter();
+            Table.Position = GameState.ScreenViewport.GetCenter();
+            Window.Position = GameState.ScreenViewport.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
 
             EasyButton.Position = EasyButton.Hitbox.Location.ToVector2();
-            EasyButton.Hitbox = new Rectangle(new Point((int)(GameState.Get.ScreenViewport.GetCenter().X - (EasyButton.Texture.Width / 2f)), (int)(Table.Position.Y - (EasyButton.Texture.Height * 1.4f))), EasyButton.Hitbox.Size);
+            EasyButton.Hitbox = new Rectangle(new Point((int)(GameState.ScreenViewport.GetCenter().X - (EasyButton.Texture.Width / 2f)), (int)(Table.Position.Y - (EasyButton.Texture.Height * 1.4f))), EasyButton.Hitbox.Size);
 
             NormalButton.Position = NormalButton.Hitbox.Location.ToVector2();
-            NormalButton.Hitbox = new Rectangle(new Point((int)(GameState.Get.ScreenViewport.GetCenter().X - (NormalButton.Texture.Width / 2f)), (int)(EasyButton.Position.Y + (NormalButton.Texture.Height / 2f))), NormalButton.Hitbox.Size);
+            NormalButton.Hitbox = new Rectangle(new Point((int)(GameState.ScreenViewport.GetCenter().X - (NormalButton.Texture.Width / 2f)), (int)(EasyButton.Position.Y + (NormalButton.Texture.Height / 2f))), NormalButton.Hitbox.Size);
 
             HardButton.Position = HardButton.Hitbox.Location.ToVector2();
-            HardButton.Hitbox = new Rectangle(new Point((int)(GameState.Get.ScreenViewport.GetCenter().X - (HardButton.Texture.Width / 2f)), (int)(NormalButton.Position.Y + (HardButton.Texture.Height / 2f))), HardButton.Hitbox.Size);
+            HardButton.Hitbox = new Rectangle(new Point((int)(GameState.ScreenViewport.GetCenter().X - (HardButton.Texture.Width / 2f)), (int)(NormalButton.Position.Y + (HardButton.Texture.Height / 2f))), HardButton.Hitbox.Size);
         }
 
         public override void GetFocus()

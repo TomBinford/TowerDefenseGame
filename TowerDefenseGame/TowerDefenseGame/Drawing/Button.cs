@@ -60,7 +60,7 @@ namespace TowerDefenseGame
 
         public bool IsClicked(MouseState newState, MouseState oldState)
         {
-            return IsPressed(GameState.Get.CurrentMouse) && !IsPressed(GameState.Get.OldMouse) && IsMousedOver(GameState.Get.OldMouse);
+            return IsPressed(GameState.CurrentMouse) && !IsPressed(GameState.OldMouse) && IsMousedOver(GameState.OldMouse);
         }
     }
 }

@@ -34,31 +34,31 @@ namespace TowerDefenseGame
         
         public override ScreenTypes Update(GameTime gameTime)
         {
-            if (SoundButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (SoundButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.SoundOn = !GameState.Get.SoundOn;
-                SoundButton.Texture = GameState.Get.SoundOn ? On : Off;
+                GameState.SoundOn = !GameState.SoundOn;
+                SoundButton.Texture = GameState.SoundOn ? On : Off;
             }
             
-            if (MusicButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (MusicButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.MusicOn = !GameState.Get.MusicOn;
-                MusicButton.Texture = GameState.Get.MusicOn ? On : Off;
+                GameState.MusicOn = !GameState.MusicOn;
+                MusicButton.Texture = GameState.MusicOn ? On : Off;
             }
 
-            if (VibrationButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (VibrationButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.VibrationOn = !GameState.Get.VibrationOn;
-                VibrationButton.Texture = GameState.Get.VibrationOn ? On : Off;
+                GameState.VibrationOn = !GameState.VibrationOn;
+                VibrationButton.Texture = GameState.VibrationOn ? On : Off;
             }
 
-            if (NotificationButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (NotificationButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                GameState.Get.NotificationOn = !GameState.Get.NotificationOn;
-                NotificationButton.Texture = GameState.Get.NotificationOn ? On : Off;
+                GameState.NotificationOn = !GameState.NotificationOn;
+                NotificationButton.Texture = GameState.NotificationOn ? On : Off;
             }
             
-            if (CloseButton.IsClicked(GameState.Get.CurrentMouse, GameState.Get.OldMouse))
+            if (CloseButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
                 return PreviousScreen;
             }
@@ -95,9 +95,9 @@ namespace TowerDefenseGame
             SoundButton = new Button(bounds, On, Color.White, 1f, 0.9f);
 
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Cemetery");
-            Background = new Sprite(texture, GameState.Get.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.Get.ScreenViewport.Height / (float)texture.Height, GameState.Get.ScreenViewport.Width / (float)texture.Width));
+            Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
 
-            Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.Get.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
+            Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
 
             Header = new Sprite(Content.Load<Texture2D>("GUI/Settings/Header"), new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f)), Color.White, 0, Background.Scale);
 
@@ -137,9 +137,9 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.Get.ScreenViewport.Height / (float)Background.Texture.Height, GameState.Get.ScreenViewport.Width / (float)Background.Texture.Width);
-            Background.Position = GameState.Get.ScreenViewport.GetCenter();
-            Table.Position = GameState.Get.ScreenViewport.GetCenter();
+            Background.Scale = Math.Max(GameState.ScreenViewport.Height / (float)Background.Texture.Height, GameState.ScreenViewport.Width / (float)Background.Texture.Width);
+            Background.Position = GameState.ScreenViewport.GetCenter();
+            Table.Position = GameState.ScreenViewport.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
             Window.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + (Table.Texture.Height / 25f));
             MusicLabel.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 3f), Table.Position.Y - (Table.Texture.Height / 5f));
@@ -160,10 +160,10 @@ namespace TowerDefenseGame
 
         public override void GetFocus()
         {
-            SoundButton.Texture = GameState.Get.SoundOn ? On : Off;
-            MusicButton.Texture = GameState.Get.MusicOn ? On : Off;
-            VibrationButton.Texture = GameState.Get.VibrationOn ? On : Off;
-            NotificationButton.Texture = GameState.Get.NotificationOn ? On : Off;
+            SoundButton.Texture = GameState.SoundOn ? On : Off;
+            MusicButton.Texture = GameState.MusicOn ? On : Off;
+            VibrationButton.Texture = GameState.VibrationOn ? On : Off;
+            NotificationButton.Texture = GameState.NotificationOn ? On : Off;
         }
     }
 }

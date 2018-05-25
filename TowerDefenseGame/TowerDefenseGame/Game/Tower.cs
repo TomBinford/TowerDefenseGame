@@ -47,7 +47,7 @@ namespace TowerDefenseGame
                         Target = Vector2.Zero;
                         float lowestRange = -1;
 
-                        var n = GameState.Get.Enemies.First;
+                        var n = GameState.Enemies.First;
                         while(n != null)
                         {
                             if (Range.Intersects(n.Value.Position))
@@ -127,8 +127,8 @@ namespace TowerDefenseGame
                         Target = Vector2.Zero;
                         float lowestRange = -1;
                         
-                        var n = GameState.Get.Enemies.First;
-                        for (int i = 0; i < GameState.Get.Enemies.Count; i++)
+                        var n = GameState.Enemies.First;
+                        for (int i = 0; i < GameState.Enemies.Count; i++)
                         {
                             if (Range.Intersects(n.Value.Position))
                             {
