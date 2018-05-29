@@ -30,6 +30,8 @@ namespace TowerDefenseGame
         public static bool VibrationOn = true;
         public static bool NotificationOn = true;
 
+        public static int Levels = 100;
+
         public static int[] LevelStars = {
             0, 1, 2, 3, 1, 2, 3, 2,
             2

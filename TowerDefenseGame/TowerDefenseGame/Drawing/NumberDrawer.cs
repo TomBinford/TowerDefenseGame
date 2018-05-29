@@ -29,7 +29,7 @@ namespace TowerDefenseGame.Screens
             float averageHeight = 0;
             for (int i = 0; i < totalCount; i++)
             {
-                totalWidth += Numbers[i].Width;
+                totalWidth += (int)(Numbers[i].Width * 1.1f);
                 averageHeight += Numbers[i].Height;
             }
             averageHeight /= totalCount;

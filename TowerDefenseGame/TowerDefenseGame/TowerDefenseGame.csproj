@@ -48,14 +48,13 @@
     <Compile Include="CircularHitbox.cs" />
     <Compile Include="Screens\DifficultySelectScreen.cs" />
     <Compile Include="Game\Enemy.cs" />
-    <Compile Include="Enums.cs" />
+    <Compile Include="Game\Enums.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Game\GameState.cs" />
     <Compile Include="Drawing\Label.cs" />
     <Compile Include="Game\Level.cs" />
     <Compile Include="Screens\LevelSelectScreen.cs" />
     <Compile Include="Screens\MainMenuScreen.cs" />
-    <Compile Include="Drawing\Number.cs" />
     <Compile Include="Drawing\NumberDrawer.cs" />
     <Compile Include="Screens\SettingsScreen.cs" />
     <Compile Include="Program.cs" />

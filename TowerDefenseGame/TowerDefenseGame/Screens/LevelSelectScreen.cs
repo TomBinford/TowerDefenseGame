@@ -13,12 +13,10 @@ namespace TowerDefenseGame
 {
     public class LevelSelectScreen : BaseScreen
     {
-        Texture2D[] Numbers;
         Texture2D[] Stars;
 
         Button[] Buttons;
         Sprite[] ButtonStars;
-        int[] ButtonNumbers;
 
         Button CloseButton;
         Button LeftButton;
@@ -28,31 +26,30 @@ namespace TowerDefenseGame
         Sprite Table;
         Sprite Header;
 
-        private int firstLevel;
-        private int FirstLevel
-        {
-            get
-            {
-                return firstLevel;
-            }
-            set
-            {
-                firstLevel = value;
-                for (int i = 0; i < ButtonNumbers.Length; i++)
-                {
-                    ButtonNumbers[i] = firstLevel - 1 + i;
-                }
-            }
-        }
+        int millisClicked;
+        int millisSinceScroll;
+
+        int startScrollDelay;
+        int scrollDelay;
+        int originalDelay;
+        int minimumDelay;
+        int delayChange;
+
+        int FirstLevel;
 
         public LevelSelectScreen()
         {
             Buttons = new Button[8];
             ButtonStars = new Sprite[8];
-            ButtonNumbers = new int[8];
-            Numbers = new Texture2D[8];
             Stars = new Texture2D[4];
             FirstLevel = 1;
+            millisClicked = 0;
+            millisSinceScroll = 0;
+            startScrollDelay = 300;
+            originalDelay = 100;
+            scrollDelay = originalDelay;
+            delayChange = 5;
+            minimumDelay = 50;
         }
 
         public override ScreenTypes Update(GameTime gameTime)
@@ -61,18 +58,71 @@ namespace TowerDefenseGame
             {
                 return ScreenTypes.Main;
             }
+
+            if (LeftButton.IsPressed(GameState.CurrentMouse))
+            {
+                millisClicked += gameTime.ElapsedGameTime.Milliseconds;
+                if (millisClicked > startScrollDelay)
+                {
+                    millisSinceScroll += gameTime.ElapsedGameTime.Milliseconds;
+                    if (millisSinceScroll > scrollDelay)
+                    {
+                        millisSinceScroll -= scrollDelay;
+                        if (scrollDelay - delayChange > minimumDelay)
+                        {
+                            scrollDelay -= delayChange;
+                        }
+                        if (FirstLevel > 1)
+                        {
+                            FirstLevel -= 8;
+                            UpdateStars();
+                        }
+                    }
+                }
+            }
+            else if (RightButton.IsPressed(GameState.CurrentMouse))
+            {
+                millisClicked += gameTime.ElapsedGameTime.Milliseconds;
+                if (millisClicked > startScrollDelay)
+                {
+                    millisSinceScroll += gameTime.ElapsedGameTime.Milliseconds;
+                    if (millisSinceScroll > scrollDelay)
+                    {
+                        millisSinceScroll -= scrollDelay;
+                        if (scrollDelay - delayChange > minimumDelay)
+                        {
+                            scrollDelay -= delayChange;
+                        }
+                        if (FirstLevel + 8 < GameState.Levels)
+                        {
+                            FirstLevel += 8;
+                            UpdateStars();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                millisClicked = 0;
+                millisSinceScroll = 0;
+                scrollDelay = originalDelay;
+            }
+
             if (LeftButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
                 if (FirstLevel > 1)
                 {
-                    FirstLevel -= 10;
-                    UpdateSprites();
+                    FirstLevel -= 8;
+                    UpdateStars();
                 }
             }
             if (RightButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                FirstLevel += 10;
-                UpdateSprites();
+                if (FirstLevel + 8 < GameState.Levels)
+                {
+                    FirstLevel += 8;
+                    UpdateStars();
+                }
             }
             return ScreenTypes.None;
         }
@@ -85,24 +135,33 @@ namespace TowerDefenseGame
             CloseButton.Draw(spriteBatch);
             LeftButton.Draw(spriteBatch);
             RightButton.Draw(spriteBatch);
-            for (int i = 0; i < 8; i++)
+            for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
             {
-                Buttons[i].Draw(spriteBatch);
+                if (i < GameState.Levels)
+                {
+                    Buttons[i % 8].Draw(spriteBatch);
+                }
             }
-            NumberDrawer.Draw(spriteBatch, ButtonNumbers[0], Buttons[0].Position);
+            for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
+            {
+                if (i < GameState.Levels)
+                {
+                    NumberDrawer.Draw(spriteBatch, i + 1, Buttons[i % 8].Position - new Vector2(0, 30));
+                }
+            }
+            for (int i = 0; i < ButtonStars.Length; i++)
+            {
+                ButtonStars[i].Draw(spriteBatch);
+            }
         }
 
         public override void Load(ContentManager Content)
         {
-            for (int i = 0; i < Numbers.Length; i++)
-            {
-                Numbers[i] = Content.Load<Texture2D>($"GUI/LevelSelect/Numbers/{i}");
-            }
             Stars[0] = Content.Load<Texture2D>("GUI/LevelSelect/Stars/NoStars");
             Stars[1] = Content.Load<Texture2D>("GUI/LevelSelect/Stars/OneStar");
             Stars[2] = Content.Load<Texture2D>("GUI/LevelSelect/Stars/TwoStars");
             Stars[3] = Content.Load<Texture2D>("GUI/LevelSelect/Stars/ThreeStars");
-
+            
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Desert");
             Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
 
@@ -133,7 +192,7 @@ namespace TowerDefenseGame
             bounds = texture.Bounds;
             bounds.X = (int)(Table.Position.X - (Table.Texture.Width / 2.34f));
             bounds.Y = (int)(Header.Position.Y + (texture.Height * 0.5f));
-            
+
             for (int y = 0; y < 2; y++)
             {
                 for (int x = 0; x < 4; x++)
@@ -145,12 +204,17 @@ namespace TowerDefenseGame
                 bounds.Y += (int)(texture.Height * 1.27f);
             }
 
-            UpdateSprites();
+            for (int i = 0; i < ButtonStars.Length; i++)
+            {
+                ButtonStars[i] = new Sprite(Stars[3], Buttons[i].Position + new Vector2(-3, 40), Color.White, 0, 0.3f);
+            }
+
+            UpdateStars();
         }
 
-        private void UpdateSprites()
+        private void UpdateStars()
         {
-            
+
         }
 
         public override void UpdatePositions()
@@ -160,9 +224,9 @@ namespace TowerDefenseGame
 
             Table.Position = Background.Position;
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
-            
+
             CloseButton.Hitbox = new Rectangle(new Point((int)(Table.Position.X + (Table.Texture.Width / 2.4f)), (int)Table.Position.Y - (int)(Table.Texture.Height / 1.8f)), CloseButton.Hitbox.Size);
-            
+
             LeftButton.Hitbox = new Rectangle(new Point((int)(Table.Position.X - (Table.Texture.Bounds.Width / 2f) - (LeftButton.Texture.Width / 2.3f)), (int)(Table.Position.Y + (Table.Texture.Height / 2f) - (LeftButton.Texture.Height / 1.6f))), LeftButton.Hitbox.Size);
 
             RightButton.Hitbox = new Rectangle(new Point(LeftButton.Hitbox.X + (int)(Table.Texture.Width * 0.97f), LeftButton.Hitbox.Y), RightButton.Hitbox.Size);
@@ -185,7 +249,7 @@ namespace TowerDefenseGame
         public override void GetFocus()
         {
             FirstLevel = 1;
-            UpdateSprites();
+            UpdateStars();
         }
     }
 }
