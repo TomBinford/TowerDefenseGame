@@ -58,7 +58,6 @@ namespace TowerDefenseGame
             {
                 return ScreenTypes.Main;
             }
-
             if (LeftButton.IsPressed(GameState.CurrentMouse))
             {
                 millisClicked += gameTime.ElapsedGameTime.Milliseconds;
@@ -93,7 +92,7 @@ namespace TowerDefenseGame
                         {
                             scrollDelay -= delayChange;
                         }
-                        if (FirstLevel + 8 < GameState.Levels)
+                        if (FirstLevel + 8 < GameState.Levels.Count)
                         {
                             FirstLevel += 8;
                             UpdateStars();
@@ -107,7 +106,6 @@ namespace TowerDefenseGame
                 millisSinceScroll = 0;
                 scrollDelay = originalDelay;
             }
-
             if (LeftButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
                 if (FirstLevel > 1)
@@ -118,10 +116,19 @@ namespace TowerDefenseGame
             }
             if (RightButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
             {
-                if (FirstLevel + 8 < GameState.Levels)
+                if (FirstLevel + 8 < GameState.Levels.Count)
                 {
                     FirstLevel += 8;
                     UpdateStars();
+                }
+            }
+
+            for (int i = 0; i < Buttons.Length; i++)
+            {
+                if (Buttons[i].IsClicked(GameState.CurrentMouse, GameState.OldMouse))
+                {
+                    GameState.CurrentLevel = GameState.Levels[i + (FirstLevel - 1)];
+                    return ScreenTypes.DifficultySelect;
                 }
             }
             return ScreenTypes.None;
@@ -137,21 +144,24 @@ namespace TowerDefenseGame
             RightButton.Draw(spriteBatch);
             for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
             {
-                if (i < GameState.Levels)
+                if (i < GameState.Levels.Count)
                 {
                     Buttons[i % 8].Draw(spriteBatch);
                 }
             }
             for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
             {
-                if (i < GameState.Levels)
+                if (i < GameState.Levels.Count)
                 {
                     NumberDrawer.Draw(spriteBatch, i + 1, Buttons[i % 8].Position - new Vector2(0, 30));
                 }
             }
-            for (int i = 0; i < ButtonStars.Length; i++)
+            for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
             {
-                ButtonStars[i].Draw(spriteBatch);
+                if (i < GameState.Levels.Count)
+                {
+                    ButtonStars[i % 8].Draw(spriteBatch);
+                }
             }
         }
 
@@ -214,7 +224,13 @@ namespace TowerDefenseGame
 
         private void UpdateStars()
         {
-
+            for (int i = FirstLevel - 1; i < FirstLevel + 7; i++)
+            {
+                if (i < GameState.Levels.Count)
+                {
+                    ButtonStars[i % 8].Texture = Stars[GameState.Levels[i].Stars];
+                }
+            }
         }
 
         public override void UpdatePositions()
@@ -243,6 +259,11 @@ namespace TowerDefenseGame
                 }
                 bounds.X = (int)(Table.Position.X - (Table.Texture.Width / 2.34));
                 bounds.Y += (int)(Buttons[0].Texture.Height * 1.27f);
+            }
+
+            for (int i = 0; i < Buttons.Length; i++)
+            {
+                ButtonStars[i].Position = Buttons[i].Position + new Vector2(-3, 40);
             }
         }
 

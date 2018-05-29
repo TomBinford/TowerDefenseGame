@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TowerDefenseGame.Screens;
 
 namespace TowerDefenseGame
 {
@@ -30,11 +31,16 @@ namespace TowerDefenseGame
         public static bool VibrationOn = true;
         public static bool NotificationOn = true;
 
-        public static int Levels = 100;
-
-        public static int[] LevelStars = {
-            0, 1, 2, 3, 1, 2, 3, 2,
-            2
-        };
+        public static List<Level> Levels = new List<Level>();
+        public static Level CurrentLevel;
+        
+        public static void Load()
+        {
+            Random random = new Random();
+            for (int i = 0; i < 100; i++)
+            {
+                Levels.Add(new Level(random.Next(4)));
+            }
+        }
     }
 }

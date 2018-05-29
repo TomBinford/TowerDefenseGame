@@ -80,6 +80,7 @@ namespace TowerDefenseGame
             MouseOffset.Y = (MouseSprite.Texture.Height / -2) + 6;
             MouseOffset.X = -4;
 
+            GameState.Load();
             ScreenManager.Load(Content);
             NumberDrawer.Load(Content);
 

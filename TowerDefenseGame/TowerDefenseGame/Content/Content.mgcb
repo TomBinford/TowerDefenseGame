@@ -337,13 +337,6 @@
 /processorParam:TextureFormat=Color
 /build:GUI/Difficulty/Header.png
 
-#begin Font.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Font.spritefont
-
 #begin GUI/LevelSelect/Table.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -583,4 +576,11 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:GUI/LevelSelect/Header.png
+
+#begin Font.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Font.spritefont
 

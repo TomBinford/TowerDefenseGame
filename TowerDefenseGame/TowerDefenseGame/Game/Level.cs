@@ -10,6 +10,15 @@ namespace TowerDefenseGame.Screens
     public class Level
     {
         public int Stars;
-        public List<Vector2> Positions;
+
+        public Level()
+        {
+            Stars = 0;
+        }
+
+        public Level(int stars)
+        {
+            Stars = (stars >= 0 && stars < 4) ? stars : throw new ArgumentOutOfRangeException("Star value must be between 0 and 3");
+        }
     }
 }
