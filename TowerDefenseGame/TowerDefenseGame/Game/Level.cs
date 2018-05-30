@@ -11,6 +11,12 @@ namespace TowerDefenseGame.Screens
     {
         public int Stars;
 
+        //List<RoadPieces>
+        //List<Sprites> -> decorations
+        //List<TurretPoints> -> Sprites + Tag?/TurretPoint?
+
+        //RoadPiece: Sprite + ConnectionPoints(Vector2's) + PathPoints(Vector2's)
+
         public Level()
         {
             Stars = 0;
