@@ -7,7 +7,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SpriteLibrary;
-using TowerDefenseGame.Screens;
 
 namespace TowerDefenseGame
 {
@@ -173,9 +172,9 @@ namespace TowerDefenseGame
             Stars[3] = Content.Load<Texture2D>("GUI/LevelSelect/Stars/ThreeStars");
             
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Desert");
-            Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
+            Background = new Sprite(texture, GameState.Screen.GetCenter(), Color.White, 0f, Math.Max(GameState.Screen.Height / (float)texture.Height, GameState.Screen.Width / (float)texture.Width));
 
-            Table = new Sprite(Content.Load<Texture2D>("GUI/LevelSelect/Table"), GameState.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
+            Table = new Sprite(Content.Load<Texture2D>("GUI/LevelSelect/Table"), GameState.Screen.GetCenter(), Color.White, 0, Background.Scale);
 
             texture = Content.Load<Texture2D>("GUI/LevelSelect/Header");
             Header = new Sprite(texture, new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f)), Color.White, 0, Background.Scale);
@@ -235,8 +234,8 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Position = GameState.ScreenViewport.GetCenter();
-            Background.Scale = Math.Max(GameState.ScreenViewport.Height / (float)Background.Texture.Height, GameState.ScreenViewport.Width / (float)Background.Texture.Width);
+            Background.Position = GameState.Screen.GetCenter();
+            Background.Scale = Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width);
 
             Table.Position = Background.Position;
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));

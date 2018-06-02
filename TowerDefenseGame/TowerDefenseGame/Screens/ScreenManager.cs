@@ -18,7 +18,8 @@ namespace TowerDefenseGame
             [ScreenTypes.Settings] = new SettingsScreen(),
             [ScreenTypes.Main] = new MainMenuScreen(),
             [ScreenTypes.LevelSelect] = new LevelSelectScreen(),
-            [ScreenTypes.DifficultySelect] = new DifficultySelectScreen()
+            [ScreenTypes.DifficultySelect] = new DifficultySelectScreen(),
+            [ScreenTypes.Build] = new BuildScreen()
         };
 
         public static void Load(ContentManager Content)

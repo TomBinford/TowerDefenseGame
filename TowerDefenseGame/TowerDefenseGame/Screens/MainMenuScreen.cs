@@ -16,6 +16,7 @@ namespace TowerDefenseGame
         Button SoundButton;
         Button MusicButton;
         Button StartButton;
+        Button BuildButton;
 
         Sprite Background;
 
@@ -44,6 +45,10 @@ namespace TowerDefenseGame
             {
                 return ScreenTypes.LevelSelect;
             }
+            if (BuildButton.IsClicked(GameState.CurrentMouse, GameState.OldMouse))
+            {
+                return ScreenTypes.Build;
+            }
             return ScreenTypes.None;
         }
 
@@ -54,12 +59,13 @@ namespace TowerDefenseGame
             SettingsButton.Draw(spriteBatch);
             SoundButton.Draw(spriteBatch);
             MusicButton.Draw(spriteBatch);
+            BuildButton.Draw(spriteBatch);
         }
 
         public override void Load(ContentManager Content)
         {
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Jungle");
-            Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), Color.White, 0f, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
+            Background = new Sprite(texture, GameState.Screen.GetCenter(), Color.White, 0f, Math.Max(GameState.Screen.Height / (float)texture.Height, GameState.Screen.Width / (float)texture.Width));
 
             Rectangle bounds;
             texture = Content.Load<Texture2D>("GUI/Main/Settings");
@@ -70,15 +76,21 @@ namespace TowerDefenseGame
             MusicOff = Content.Load<Texture2D>("GUI/Main/MusicOff");
 
             bounds = texture.Bounds;
-            bounds.X = GameState.ScreenViewport.Width - (int)(texture.Width * 1.5f);
+            bounds.X = GameState.Screen.Width - (int)(texture.Width * 1.5f);
             bounds.Y = 40;
             SettingsButton = new Button(bounds, texture, Color.White, 1f, 0.9f);
 
             texture = Content.Load<Texture2D>("GUI/Main/Play");
             bounds = texture.Bounds;
-            bounds.X = (int)(GameState.ScreenViewport.GetCenter().X - (bounds.Width / 2f));
-            bounds.Y = (int)(GameState.ScreenViewport.GetCenter().Y - (bounds.Height / 2f));
+            bounds.X = (int)(GameState.Screen.GetCenter().X - (bounds.Width / 2f));
+            bounds.Y = (int)(GameState.Screen.GetCenter().Y - (bounds.Height / 2f));
             StartButton = new Button(bounds, texture, Color.White, 1f, 0.9f);
+
+            texture = Content.Load<Texture2D>("GUI/LevelSelect/EmptyButton");
+            bounds = texture.Bounds;
+            bounds.X = (int)(GameState.Screen.Width - bounds.Width * 1.2f);
+            bounds.Y = (int)(GameState.Screen.Height - bounds.Height * 1.2f);
+            BuildButton = new Button(bounds, texture, Color.White, 1f, 0.9f);
 
             bounds = SoundOn.Bounds;
             bounds.X = 40;
@@ -91,12 +103,14 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.ScreenViewport.Height / (float)Background.Texture.Height, GameState.ScreenViewport.Width / (float)Background.Texture.Width);
-            Background.Position = GameState.ScreenViewport.GetCenter();
+            Background.Scale = Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width);
+            Background.Position = GameState.Screen.GetCenter();
+
+            BuildButton.Hitbox = new Rectangle(new Point((int)(GameState.Screen.Width - BuildButton.Hitbox.Width * 1.2f), (int)(GameState.Screen.Height - BuildButton.Hitbox.Height * 1.2f)), BuildButton.Hitbox.Size);
+
+            SettingsButton.Hitbox = new Rectangle(new Point((GameState.Screen.Width - (int)(SettingsButton.Texture.Width * 1f)), 20), SettingsButton.Hitbox.Size);
             
-            SettingsButton.Hitbox = new Rectangle(new Point((GameState.ScreenViewport.Width - (int)(SettingsButton.Texture.Width * 1f)), 20), SettingsButton.Hitbox.Size);
-            
-            StartButton.Hitbox = new Rectangle(new Point((int)(GameState.ScreenViewport.GetCenter().X - (StartButton.Texture.Width / 2f)), (int)(GameState.ScreenViewport.GetCenter().Y - (StartButton.Texture.Height / 2f))), StartButton.Hitbox.Size);
+            StartButton.Hitbox = new Rectangle(new Point((int)(GameState.Screen.GetCenter().X - (StartButton.Texture.Width / 2f)), (int)(GameState.Screen.GetCenter().Y - (StartButton.Texture.Height / 2f))), StartButton.Hitbox.Size);
         }
 
         public override void GetFocus()

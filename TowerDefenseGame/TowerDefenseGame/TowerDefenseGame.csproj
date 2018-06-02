@@ -43,9 +43,12 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Drawing\Grid.cs" />
+    <Compile Include="Game\RoadPiece.cs" />
     <Compile Include="Screens\BaseScreen.cs" />
     <Compile Include="Drawing\Button.cs" />
     <Compile Include="CircularHitbox.cs" />
+    <Compile Include="Screens\BuildScreen.cs" />
     <Compile Include="Screens\DifficultySelectScreen.cs" />
     <Compile Include="Game\Enemy.cs" />
     <Compile Include="Game\Enums.cs" />

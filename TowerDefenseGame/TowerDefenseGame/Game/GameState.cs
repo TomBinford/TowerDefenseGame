@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TowerDefenseGame.Screens;
 
 namespace TowerDefenseGame
 {
@@ -15,8 +14,10 @@ namespace TowerDefenseGame
     {
         public static MouseState CurrentMouse;
         public static MouseState OldMouse;
-
-        public static Viewport ScreenViewport;
+        public static KeyboardState CurrentKeyboard;
+        public static KeyboardState OldKeyboard;
+        
+        public static Viewport Screen;
 
         public static LinkedList<Enemy> Enemies = new LinkedList<Enemy>();
         public static LinkedList<Soldier> Soldiers = new LinkedList<Soldier>();

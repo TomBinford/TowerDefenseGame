@@ -65,6 +65,7 @@ namespace TowerDefenseGame
         DifficultySelect,
         LevelSelect,
         Battle,
+        Build,
         Settings,
         None
     }

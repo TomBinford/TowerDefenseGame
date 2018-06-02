@@ -95,9 +95,9 @@ namespace TowerDefenseGame
             SoundButton = new Button(bounds, On, Color.White, 1f, 0.9f);
 
             Texture2D texture = Content.Load<Texture2D>("Backgrounds/Cemetery");
-            Background = new Sprite(texture, GameState.ScreenViewport.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.ScreenViewport.Height / (float)texture.Height, GameState.ScreenViewport.Width / (float)texture.Width));
+            Background = new Sprite(texture, GameState.Screen.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.Screen.Height / (float)texture.Height, GameState.Screen.Width / (float)texture.Width));
 
-            Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.ScreenViewport.GetCenter(), Color.White, 0, Background.Scale);
+            Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.Screen.GetCenter(), Color.White, 0, Background.Scale);
 
             Header = new Sprite(Content.Load<Texture2D>("GUI/Settings/Header"), new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f)), Color.White, 0, Background.Scale);
 
@@ -137,9 +137,9 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.ScreenViewport.Height / (float)Background.Texture.Height, GameState.ScreenViewport.Width / (float)Background.Texture.Width);
-            Background.Position = GameState.ScreenViewport.GetCenter();
-            Table.Position = GameState.ScreenViewport.GetCenter();
+            Background.Scale = Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width);
+            Background.Position = GameState.Screen.GetCenter();
+            Table.Position = GameState.Screen.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));
             Window.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 4.5f), Table.Position.Y + (Table.Texture.Height / 25f));
             MusicLabel.Position = new Vector2(Table.Position.X - (Table.Texture.Width / 3f), Table.Position.Y - (Table.Texture.Height / 5f));

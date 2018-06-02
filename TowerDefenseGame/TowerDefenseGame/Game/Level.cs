@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TowerDefenseGame.Screens
+namespace TowerDefenseGame
 {
     public class Level
     {

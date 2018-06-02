@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Media;
 using SpriteLibrary;
 using System;
 using System.Collections.Generic;
-using TowerDefenseGame.Screens;
 using WinForms = System.Windows.Forms;
 
 namespace TowerDefenseGame
@@ -37,7 +36,7 @@ namespace TowerDefenseGame
             }
             return returnColors;
         }
-
+        
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -53,7 +52,7 @@ namespace TowerDefenseGame
         WinForms.Form owningForm;
         protected override void Initialize()
         {
-            GameState.ScreenViewport = GraphicsDevice.Viewport;
+            GameState.Screen = GraphicsDevice.Viewport;
             base.Initialize();
 
             owningForm = WinForms.Control.FromHandle(Window.Handle) as WinForms.Form;
@@ -68,7 +67,7 @@ namespace TowerDefenseGame
             graphics.PreferredBackBufferHeight = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1080 : owningForm.ClientRectangle.Height;
             graphics.ApplyChanges();
 
-            GameState.ScreenViewport = GraphicsDevice.Viewport;
+            GameState.Screen = GraphicsDevice.Viewport;
             ScreenManager.UpdatePositions();
         }
 
@@ -94,6 +93,7 @@ namespace TowerDefenseGame
         protected override void Update(GameTime gameTime)
         {
             GameState.CurrentMouse = Mouse.GetState();
+            GameState.CurrentKeyboard = Keyboard.GetState();
             MouseSprite.Position = GameState.CurrentMouse.Position.ToVector2() - MouseOffset;
 
             if (GameState.CurrentMouse.LeftButton == ButtonState.Pressed)
@@ -108,6 +108,7 @@ namespace TowerDefenseGame
             ScreenManager.Update(gameTime);
 
             GameState.OldMouse = GameState.CurrentMouse;
+            GameState.OldKeyboard = GameState.CurrentKeyboard;
             base.Update(gameTime);
         }
 
