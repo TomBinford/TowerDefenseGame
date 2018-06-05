@@ -48,12 +48,12 @@ namespace TowerDefenseGame
         {
             if (IsMousedOver(State) && (State.LeftButton == ButtonState.Pressed))
             {
-                Scale = ClickedScale;
+                Scale = new Vector2(ClickedScale);
                 return true;
             }
             else
             {
-                Scale = NormalScale;
+                Scale = new Vector2(NormalScale);
                 return false;
             }
         }

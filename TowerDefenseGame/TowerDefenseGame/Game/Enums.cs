@@ -69,6 +69,17 @@ namespace TowerDefenseGame
         Settings,
         None
     }
+    
+    public enum Themes
+    {
+        Cemetery,
+        Desert,
+        Jungle,
+        Medieval,
+        Snow,
+        Spooky,
+        Village
+    }
 
     public static class Functions
     {

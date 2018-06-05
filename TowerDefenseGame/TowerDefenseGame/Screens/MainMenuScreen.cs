@@ -64,7 +64,7 @@ namespace TowerDefenseGame
 
         public override void Load(ContentManager Content)
         {
-            Texture2D texture = Content.Load<Texture2D>("Backgrounds/Jungle");
+            Texture2D texture = Content.Load<Texture2D>("Themes/Jungle/Background");
             Background = new Sprite(texture, GameState.Screen.GetCenter(), Color.White, 0f, Math.Max(GameState.Screen.Height / (float)texture.Height, GameState.Screen.Width / (float)texture.Width));
 
             Rectangle bounds;
@@ -103,7 +103,7 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width);
+            Background.Scale = new Vector2(Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width));
             Background.Position = GameState.Screen.GetCenter();
 
             BuildButton.Hitbox = new Rectangle(new Point((int)(GameState.Screen.Width - BuildButton.Hitbox.Width * 1.2f), (int)(GameState.Screen.Height - BuildButton.Hitbox.Height * 1.2f)), BuildButton.Hitbox.Size);

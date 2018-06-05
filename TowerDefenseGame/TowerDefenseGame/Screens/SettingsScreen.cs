@@ -94,7 +94,7 @@ namespace TowerDefenseGame
             bounds.Y = 20;
             SoundButton = new Button(bounds, On, Color.White, 1f, 0.9f);
 
-            Texture2D texture = Content.Load<Texture2D>("Backgrounds/Cemetery");
+            Texture2D texture = Content.Load<Texture2D>("Themes/Cemetery/Background");
             Background = new Sprite(texture, GameState.Screen.GetCenter(), new Color(150, 150, 150), 0f, Math.Max(GameState.Screen.Height / (float)texture.Height, GameState.Screen.Width / (float)texture.Width));
 
             Table = new Sprite(Content.Load<Texture2D>("GUI/Settings/Table"), GameState.Screen.GetCenter(), Color.White, 0, Background.Scale);
@@ -137,7 +137,7 @@ namespace TowerDefenseGame
 
         public override void UpdatePositions()
         {
-            Background.Scale = Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width);
+            Background.Scale = new Vector2(Math.Max(GameState.Screen.Height / (float)Background.Texture.Height, GameState.Screen.Width / (float)Background.Texture.Width));
             Background.Position = GameState.Screen.GetCenter();
             Table.Position = GameState.Screen.GetCenter();
             Header.Position = new Vector2(Table.Position.X, Table.Position.Y - (Table.Texture.Height / 2.5f));

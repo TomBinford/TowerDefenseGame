@@ -33,11 +33,21 @@ namespace SpriteLibrary
 
         public Color Tint;
         public float Angle;
-        public float Scale;
+        public Vector2 Scale;
         public Vector2 Origin;
         public SpriteEffects Effect;
 
         public Sprite(Texture2D texture, Vector2 position, Color tint, float angle = 0, float scale = 1)
+        {
+            Texture = texture;
+            Position = position;
+            Tint = tint;
+            Angle = angle;
+            Scale = new Vector2(scale);
+            Effect = SpriteEffects.None;
+        }
+
+        public Sprite(Texture2D texture, Vector2 position, Color tint, float angle, Vector2 scale)
         {
             Texture = texture;
             Position = position;

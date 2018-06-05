@@ -63,10 +63,10 @@ namespace TowerDefenseGame
 
         private void OwningForm_Resize(object sender, EventArgs e)
         {
-            graphics.PreferredBackBufferWidth = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1920 : owningForm.ClientRectangle.Width;
-            graphics.PreferredBackBufferHeight = owningForm.WindowState == WinForms.FormWindowState.Maximized ? 1080 : owningForm.ClientRectangle.Height;
+            graphics.PreferredBackBufferWidth = owningForm.ClientRectangle.Width;
+            graphics.PreferredBackBufferHeight = owningForm.ClientRectangle.Height;
             graphics.ApplyChanges();
-
+            
             GameState.Screen = GraphicsDevice.Viewport;
             ScreenManager.UpdatePositions();
         }
@@ -74,7 +74,7 @@ namespace TowerDefenseGame
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             MouseSprite = new Sprite(Content.Load<Texture2D>("GUI/MouseCursor"), Vector2.Zero, Color.White, MathHelper.ToRadians(250), 0.5f);
             MouseOffset.Y = (MouseSprite.Texture.Height / -2) + 6;
             MouseOffset.X = -4;
@@ -98,11 +98,11 @@ namespace TowerDefenseGame
 
             if (GameState.CurrentMouse.LeftButton == ButtonState.Pressed)
             {
-                MouseSprite.Scale = 0.4f;
+                MouseSprite.Scale = new Vector2(0.4f);
             }
             else
             {
-                MouseSprite.Scale = 0.5f;
+                MouseSprite.Scale = new Vector2(0.5f);
             }
 
             ScreenManager.Update(gameTime);
@@ -111,7 +111,7 @@ namespace TowerDefenseGame
             GameState.OldKeyboard = GameState.CurrentKeyboard;
             base.Update(gameTime);
         }
-
+        
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.White);
