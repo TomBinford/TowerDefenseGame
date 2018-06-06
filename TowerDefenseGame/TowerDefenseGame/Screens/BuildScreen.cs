@@ -25,12 +25,13 @@ namespace TowerDefenseGame
         Dictionary<Themes, Texture2D> TreeImages;
 
         Sprite ThemeMenu;
-        Sprite[] Trees;
+        Button[] Trees;
 
         public BuildScreen()
         {
             GridVisible = true;
-            Trees = new Sprite[3];
+            Trees = new Button[3];
+            currentTheme = Themes.Cemetery;
         }
 
         public override ScreenTypes Update(GameTime gameTime)
@@ -38,6 +39,30 @@ namespace TowerDefenseGame
             if (GameState.CurrentKeyboard.IsKeyDown(Keys.G) && GameState.OldKeyboard.IsKeyUp(Keys.G) && GameState.CurrentKeyboard.IsKeyDown(Keys.LeftControl))
             {
                 GridVisible = !GridVisible;
+            }
+            if (Trees[0].IsClicked(GameState.CurrentMouse, GameState.OldMouse))
+            {
+                currentTheme = currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1;
+                UpdateTrees();
+            }
+            if (Trees[2].IsClicked(GameState.CurrentMouse, GameState.OldMouse))
+            {
+                currentTheme = currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1;
+                UpdateTrees();
+            }
+            int mouseDifference = GameState.CurrentMouse.ScrollWheelValue - GameState.OldMouse.ScrollWheelValue;
+            if (Math.Abs(GameState.CurrentMouse.X - ThemeMenu.Position.X) <= ThemeMenu.Texture.Width / 2f && Math.Abs(GameState.CurrentMouse.Y - ThemeMenu.Position.Y) <= ThemeMenu.Texture.Height / 2f)
+            {
+                if (mouseDifference > 0)
+                {
+                    currentTheme = currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1;
+                    UpdateTrees();
+                }
+                if (mouseDifference < 0)
+                {
+                    currentTheme = currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1;
+                    UpdateTrees();
+                }
             }
             return ScreenTypes.None;
         }
@@ -50,6 +75,10 @@ namespace TowerDefenseGame
             }
             ThemeMenu.Draw(spriteBatch);
             Trees[0].Draw(spriteBatch);
+            for (int i = 0; i < Trees.Length; i++)
+            {
+                Trees[i].Draw(spriteBatch);
+            }
         }
 
         public override void Load(ContentManager Content)
@@ -62,18 +91,28 @@ namespace TowerDefenseGame
             }
             Texture2D texture = Content.Load<Texture2D>("GUI/Build/EmptyButton");
             ThemeMenu = new Sprite(texture, new Vector2(100, GameState.Screen.Height - (texture.Height)), Color.White, 0, new Vector2(1, 2));
-            
-            for (int i = 0; i < 3; i++)
-            {
-                Trees[i] = new Sprite(null, new Vector2(ThemeMenu.Position.X, (ThemeMenu.Position.Y - (ThemeMenu.Texture.Height / 2f)) + 100 * i), Color.White);
-            }
+
+            Trees[0] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1].Width / 4f)), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f)), new Point(50)), null, Color.White, 1f, 1f);
+            Trees[1] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme].Width / (4f * 1.5f))), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f) + 80), new Point(50)), null, Color.White, 1f, 1f);
+            Trees[2] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1].Width / 4f)), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f) + 160), new Point(50)), null, Color.White, 1f, 1f);
+
             UpdateTrees();
         }
 
         private void UpdateTrees()
         {
-            Trees[0].Texture = TreeImages[currentTheme == Themes.Cemetery ? Themes.Village :  currentTheme - 1];
-            Trees[0].Scale = new Vector2(Math.Max(50 / (float)Trees[0].Texture.Height, 50 / (float)Trees[0].Texture.Width));
+            Trees[0].Texture = TreeImages[currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1];
+            Trees[0].NormalScale = new Vector2(Math.Max(40 / (float)Trees[0].Texture.Height, 40 / (float)Trees[0].Texture.Width));
+            Trees[0].ClickedScale = Trees[0].NormalScale;
+            Trees[0].Scale = Trees[0].NormalScale;
+            Trees[1].Texture = TreeImages[currentTheme];
+            Trees[1].NormalScale = new Vector2(Math.Min(40 / (float)Trees[1].Texture.Height, 40 / (float)Trees[1].Texture.Width) * 2f);
+            Trees[1].ClickedScale = Trees[1].NormalScale;
+            Trees[1].Scale = Trees[1].NormalScale;
+            Trees[2].Texture = TreeImages[currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1];
+            Trees[2].NormalScale = new Vector2(Math.Max(40 / (float)Trees[2].Texture.Height, 40 / (float)Trees[2].Texture.Width));
+            Trees[2].ClickedScale = Trees[2].NormalScale;
+            Trees[2].Scale = Trees[2].NormalScale;
         }
 
         public override void UpdatePositions()

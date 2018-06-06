@@ -88,6 +88,11 @@ namespace TowerDefenseGame
             return new Rectangle(rect.Location, new Point((int)(rect.Width * scale), (int)(rect.Height * scale)));
         }
 
+        public static Rectangle Scale(this Rectangle rect, Vector2 scale)
+        {
+            return new Rectangle(rect.Location, new Point((int)(rect.Width * scale.X), (int)(rect.Height * scale.Y)));
+        }
+
         public static Vector2 GetCenter(this Viewport viewport)
         {
             return new Vector2(viewport.X + viewport.Width / 2f, viewport.Y + viewport.Height / 2f);

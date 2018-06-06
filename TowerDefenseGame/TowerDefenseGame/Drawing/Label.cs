@@ -21,6 +21,13 @@ namespace TowerDefenseGame
             Text = text;
         }
 
+        public Label(Texture2D background, Vector2 position, Color tint, Vector2 scale, SpriteFont font, string text)
+            : base(background, position, tint, 0f, scale)
+        {
+            Font = font;
+            Text = text;
+        }
+
         public override void Draw(SpriteBatch spriteBatch)
         {
             float total = 0;

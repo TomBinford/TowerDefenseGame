@@ -12,8 +12,8 @@ namespace TowerDefenseGame
 {
     public class Button : Label
     {
-        public float NormalScale;
-        public float ClickedScale;
+        public Vector2 NormalScale;
+        public Vector2 ClickedScale;
 
         private Rectangle hitbox;
 
@@ -35,6 +35,14 @@ namespace TowerDefenseGame
             : base(background, hitbox.Center.ToVector2(), tint, normalScale, font, text)
         {
             Hitbox = hitbox.Scale(normalScale);
+            NormalScale = new Vector2(normalScale);
+            ClickedScale = new Vector2(clickedScale);
+        }
+
+        public Button(Rectangle hitbox, Texture2D background, Color tint, Vector2 normalScale, Vector2 clickedScale, SpriteFont font = null, string text = "")
+            : base(background, hitbox.Center.ToVector2(), tint, normalScale, font, text)
+        {
+            Hitbox = hitbox.Scale(normalScale);
             NormalScale = normalScale;
             ClickedScale = clickedScale;
         }
@@ -48,12 +56,12 @@ namespace TowerDefenseGame
         {
             if (IsMousedOver(State) && (State.LeftButton == ButtonState.Pressed))
             {
-                Scale = new Vector2(ClickedScale);
+                Scale = ClickedScale;
                 return true;
             }
             else
             {
-                Scale = new Vector2(NormalScale);
+                Scale = NormalScale;
                 return false;
             }
         }
