@@ -81,6 +81,16 @@ namespace TowerDefenseGame
         Village
     }
 
+    public enum RoadTypes
+    {
+        Straight,
+        Curve,
+        CrossRoad,
+        Spiral,
+        Split,
+        Zig
+    }
+
     public static class Functions
     {
         public static Rectangle Scale(this Rectangle rect, float scale)

@@ -15,23 +15,29 @@ namespace TowerDefenseGame
     {
         //Road on left
         //Decorations on right
-        //Scroll theme(snow, desert, etc.) on bottom left with trees from each theme signifying which one is selected
+        //Scroll theme(snow, desert, etc.) on bottom left with trees from each theme signifying which one is selected DONE
 
         Level level;
         Grid Grid;
         bool GridVisible;
-
+        
         Themes currentTheme;
         Dictionary<Themes, Texture2D> TreeImages;
 
         Sprite ThemeMenu;
         Button[] Trees;
 
+        Dictionary<Themes, Dictionary<RoadTypes, Texture2D>> RoadPieces;
+        Sprite[] Pieces;
+
         public BuildScreen()
         {
             GridVisible = true;
             Trees = new Button[3];
+            Pieces = new Sprite[5];
+            RoadPieces = new Dictionary<Themes, Dictionary<RoadTypes, Texture2D>>();
             currentTheme = Themes.Cemetery;
+            level = new Level();
         }
 
         public override ScreenTypes Update(GameTime gameTime)
@@ -79,6 +85,10 @@ namespace TowerDefenseGame
             {
                 Trees[i].Draw(spriteBatch);
             }
+            foreach (Sprite s in Pieces)
+            {
+                s.Draw(spriteBatch);
+            }
         }
 
         public override void Load(ContentManager Content)
@@ -87,7 +97,16 @@ namespace TowerDefenseGame
             TreeImages = new Dictionary<Themes, Texture2D>();
             for (Themes theme = Themes.Cemetery; theme <= Themes.Village; theme++)
             {
+                RoadPieces.Add(theme, new Dictionary<RoadTypes, Texture2D>());
+                for (RoadTypes type = RoadTypes.Straight; type <= RoadTypes.Zig; type++)
+                {
+                    RoadPieces[theme].Add(type, Content.Load<Texture2D>($"Themes/Cemetery/Road/{type.ToString()}"));
+                }
                 TreeImages.Add(theme, Content.Load<Texture2D>($"Themes/{theme.ToString()}/Tree"));
+            }
+            for (int i = 0; i < Pieces.Length; i++)
+            {
+                Pieces[i] = new Sprite(RoadPieces[currentTheme][(RoadTypes)i], Vector2.Zero, Color.White);
             }
             Texture2D texture = Content.Load<Texture2D>("GUI/Build/EmptyButton");
             ThemeMenu = new Sprite(texture, new Vector2(100, GameState.Screen.Height - (texture.Height)), Color.White, 0, new Vector2(1, 2));
