@@ -10,6 +10,7 @@ namespace TowerDefenseGame
     public class Level
     {
         public int Stars;
+        public List<RoadPiece> Road;
 
         //List<RoadPieces>
         //List<Sprites> -> decorations
@@ -20,6 +21,7 @@ namespace TowerDefenseGame
         public Level()
         {
             Stars = 0;
+            Road = new List<RoadPiece>();
         }
 
         public Level(int stars)

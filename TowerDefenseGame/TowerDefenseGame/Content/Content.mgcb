@@ -704,18 +704,6 @@
 /processorParam:TextureFormat=Color
 /build:GUI/Build/EmptyButton.png
 
-#begin Themes/Cemetery/Road/3Way.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Themes/Cemetery/Road/3Way.png
-
 #begin Themes/Cemetery/Road/Spiral.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -775,4 +763,16 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Themes/Cemetery/Road/Straight.png
+
+#begin Themes/Cemetery/Road/CrossRoad.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Themes/Cemetery/Road/CrossRoad.png
 

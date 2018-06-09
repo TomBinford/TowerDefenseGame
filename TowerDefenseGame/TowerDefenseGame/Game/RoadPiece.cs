@@ -13,10 +13,12 @@ namespace TowerDefenseGame
     {
         public Vector2 Position;
         public bool IsTaken;
+        public float ConnectAngle;
 
-        public ConnectionPoint(Vector2 position)
+        public ConnectionPoint(Vector2 position, float connectAngle)
         {
             Position = position;
+            ConnectAngle = connectAngle;
             IsTaken = false;
         }
     }

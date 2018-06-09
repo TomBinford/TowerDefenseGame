@@ -16,6 +16,7 @@ namespace TowerDefenseGame
         //Road on left
         //Decorations on right
         //Scroll theme(snow, desert, etc.) on bottom left with trees from each theme signifying which one is selected DONE
+        //Rotate piece with r and only allow snaps for correct rotations
 
         Level level;
         Grid Grid;
@@ -27,15 +28,17 @@ namespace TowerDefenseGame
         Sprite ThemeMenu;
         Button[] Trees;
 
-        Dictionary<Themes, Dictionary<RoadTypes, Texture2D>> RoadPieces;
+        Dictionary<Themes, Dictionary<RoadTypes, Texture2D>> RoadImages;
         Sprite[] Pieces;
+        Button[] PieceButtons;
 
         public BuildScreen()
         {
             GridVisible = true;
             Trees = new Button[3];
             Pieces = new Sprite[5];
-            RoadPieces = new Dictionary<Themes, Dictionary<RoadTypes, Texture2D>>();
+            PieceButtons = new Button[Pieces.Length];
+            RoadImages = new Dictionary<Themes, Dictionary<RoadTypes, Texture2D>>();
             currentTheme = Themes.Cemetery;
             level = new Level();
         }
@@ -57,7 +60,7 @@ namespace TowerDefenseGame
                 UpdateTrees();
             }
             int mouseDifference = GameState.CurrentMouse.ScrollWheelValue - GameState.OldMouse.ScrollWheelValue;
-            if (Math.Abs(GameState.CurrentMouse.X - ThemeMenu.Position.X) <= ThemeMenu.Texture.Width / 2f && Math.Abs(GameState.CurrentMouse.Y - ThemeMenu.Position.Y) <= ThemeMenu.Texture.Height / 2f)
+            if (new Rectangle(new Point((int)(ThemeMenu.Position.X - ThemeMenu.Texture.Width / 2f), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height)), new Point(ThemeMenu.Texture.Bounds.Size.X, ThemeMenu.Texture.Bounds.Size.Y * 2)).Contains(GameState.CurrentMouse.Position))
             {
                 if (mouseDifference > 0)
                 {
@@ -68,6 +71,14 @@ namespace TowerDefenseGame
                 {
                     currentTheme = currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1;
                     UpdateTrees();
+                }
+            }
+            for (int i = 0; i < PieceButtons.Length; i++)
+            {
+                Pieces[i].Scale = new Vector2(Math.Min(40 / (float)RoadImages[currentTheme][(RoadTypes)i].Width, 40 / (float)RoadImages[currentTheme][(RoadTypes)i].Height)) * PieceButtons[i].Scale / PieceButtons[i].NormalScale;
+                if (PieceButtons[i].IsClicked(GameState.CurrentMouse, GameState.OldMouse))
+                {
+                    
                 }
             }
             return ScreenTypes.None;
@@ -85,9 +96,10 @@ namespace TowerDefenseGame
             {
                 Trees[i].Draw(spriteBatch);
             }
-            foreach (Sprite s in Pieces)
+            for (int i = 0; i < Pieces.Length; i++)
             {
-                s.Draw(spriteBatch);
+                PieceButtons[i].Draw(spriteBatch);
+                Pieces[i].Draw(spriteBatch);
             }
         }
 
@@ -97,18 +109,19 @@ namespace TowerDefenseGame
             TreeImages = new Dictionary<Themes, Texture2D>();
             for (Themes theme = Themes.Cemetery; theme <= Themes.Village; theme++)
             {
-                RoadPieces.Add(theme, new Dictionary<RoadTypes, Texture2D>());
+                RoadImages.Add(theme, new Dictionary<RoadTypes, Texture2D>());
                 for (RoadTypes type = RoadTypes.Straight; type <= RoadTypes.Zig; type++)
                 {
-                    RoadPieces[theme].Add(type, Content.Load<Texture2D>($"Themes/Cemetery/Road/{type.ToString()}"));
+                    RoadImages[theme].Add(type, Content.Load<Texture2D>($"Themes/Cemetery/Road/{type.ToString()}"));
                 }
                 TreeImages.Add(theme, Content.Load<Texture2D>($"Themes/{theme.ToString()}/Tree"));
             }
-            for (int i = 0; i < Pieces.Length; i++)
-            {
-                Pieces[i] = new Sprite(RoadPieces[currentTheme][(RoadTypes)i], Vector2.Zero, Color.White);
-            }
             Texture2D texture = Content.Load<Texture2D>("GUI/Build/EmptyButton");
+            for (int i = 0; i < PieceButtons.Length; i++)
+            {
+                PieceButtons[i] = new Button(new Rectangle(new Point((int)(texture.Width / 4f), (int)(texture.Width / 4f + i * texture.Height / 1.5f)), texture.Bounds.Size), texture, Color.White, 0.5f, 0.48f);
+                Pieces[i] = new Sprite(RoadImages[currentTheme][(RoadTypes)i], PieceButtons[i].Position, Color.White, 0f, new Vector2(Math.Min(40 / (float)RoadImages[currentTheme][(RoadTypes)i].Width, 40 / (float)RoadImages[currentTheme][(RoadTypes)i].Height)));
+            }
             ThemeMenu = new Sprite(texture, new Vector2(100, GameState.Screen.Height - (texture.Height)), Color.White, 0, new Vector2(1, 2));
 
             Trees[0] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1].Width / 4f)), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f)), new Point(50)), null, Color.White, 1f, 1f);

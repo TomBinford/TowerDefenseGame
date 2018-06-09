@@ -95,7 +95,7 @@ namespace TowerDefenseGame
     {
         public static Rectangle Scale(this Rectangle rect, float scale)
         {
-            return new Rectangle(rect.Location, new Point((int)(rect.Width * scale), (int)(rect.Height * scale)));
+            return new Rectangle(new Point(rect.Center.X - (int)(rect.Width * scale / 2f), rect.Center.Y - (int)(rect.Height * scale / 2f)), new Point((int)(rect.Width * scale), (int)(rect.Height * scale)));
         }
 
         public static Rectangle Scale(this Rectangle rect, Vector2 scale)
