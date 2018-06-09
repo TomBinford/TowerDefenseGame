@@ -21,21 +21,6 @@ namespace TowerDefenseGame
         List<Tower> towers;
 
         Random random = new Random();
-
-        public Color[,] GetColors(Texture2D texture)
-        {
-            Color[] colors = new Color[texture.Height * texture.Width];
-            texture.GetData(colors);
-            Color[,] returnColors = new Color[texture.Width, texture.Height];
-            for (int x = 0; x < texture.Width; x++)
-            {
-                for (int y = 0; y < texture.Height; y++)
-                {
-                    returnColors[x, y] = colors[x + y * texture.Width];
-                }
-            }
-            return returnColors;
-        }
         
         public Game1()
         {

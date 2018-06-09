@@ -45,7 +45,8 @@ namespace TowerDefenseGame
 
         public List<Vector2> Path;
 
-        public RoadPiece(Texture2D texture, RoadPieceData data, List<Vector2> path) : base(texture, data.Position, Color.White, 0f, 1f)
+        public RoadPiece(Texture2D texture, RoadPieceData data, List<Vector2> path)
+            : base(texture, data.Position, Color.White, 0f, 1f)
         {
             Data = data;
             Path = path;

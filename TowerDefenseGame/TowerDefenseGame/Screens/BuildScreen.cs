@@ -32,6 +32,11 @@ namespace TowerDefenseGame
         Sprite[] Pieces;
         Button[] PieceButtons;
 
+        Sprite TurretPoint;
+        
+        RoadTypes DraggedType;
+        Sprite DraggedPiece;
+
         public BuildScreen()
         {
             GridVisible = true;
@@ -78,8 +83,19 @@ namespace TowerDefenseGame
                 Pieces[i].Scale = new Vector2(Math.Min(40 / (float)RoadImages[currentTheme][(RoadTypes)i].Width, 40 / (float)RoadImages[currentTheme][(RoadTypes)i].Height)) * PieceButtons[i].Scale / PieceButtons[i].NormalScale;
                 if (PieceButtons[i].IsClicked(GameState.CurrentMouse, GameState.OldMouse))
                 {
-                    
+                    DraggedType = (RoadTypes)i;
+                    DraggedPiece.Texture = RoadImages[currentTheme][DraggedType];
                 }
+            }
+            if (GameState.CurrentMouse.LeftButton == ButtonState.Pressed)
+            {
+                DraggedPiece.Position = GameState.CurrentMouse.Position.ToVector2();
+            }
+            else if(DraggedPiece.Texture != null)
+            {
+                var s = DraggedPiece;
+                level.Background.Add(s);
+                DraggedPiece.Texture = null;
             }
             return ScreenTypes.None;
         }
@@ -101,6 +117,8 @@ namespace TowerDefenseGame
                 PieceButtons[i].Draw(spriteBatch);
                 Pieces[i].Draw(spriteBatch);
             }
+            DraggedPiece.Draw(spriteBatch);
+            level.Draw(spriteBatch, TurretPoint);
         }
 
         public override void Load(ContentManager Content)
@@ -127,6 +145,10 @@ namespace TowerDefenseGame
             Trees[0] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme == Themes.Cemetery ? Themes.Village : currentTheme - 1].Width / 4f)), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f)), new Point(50)), null, Color.White, 1f, 1f);
             Trees[1] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme].Width / (4f * 1.5f))), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f) + 80), new Point(50)), null, Color.White, 1f, 1f);
             Trees[2] = new Button(new Rectangle(new Point((int)(ThemeMenu.Position.X - (TreeImages[currentTheme == Themes.Village ? Themes.Cemetery : currentTheme + 1].Width / 4f)), (int)(ThemeMenu.Position.Y - ThemeMenu.Texture.Height / 1.5f) + 160), new Point(50)), null, Color.White, 1f, 1f);
+
+            DraggedPiece = new Sprite(null, Vector2.Zero, Color.White, 0f, 50f / RoadImages[currentTheme][RoadTypes.Straight].Width);
+
+            TurretPoint = new Sprite(Content.Load<Texture2D>("Themes/Cemetery/Dot"), Vector2.Zero, Color.White, 0f, DraggedPiece.Scale);
 
             UpdateTrees();
         }
