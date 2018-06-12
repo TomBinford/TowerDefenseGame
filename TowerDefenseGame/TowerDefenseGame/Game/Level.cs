@@ -47,7 +47,7 @@ namespace TowerDefenseGame
             foreach (Sprite s in Background)
             {
                 s.Draw(spriteBatch);
-            }/*
+            }
             foreach (RoadPiece r in Road)
             {
                 r.Draw(spriteBatch);
@@ -60,7 +60,7 @@ namespace TowerDefenseGame
             foreach (Sprite s in Decorations)
             {
                 s.Draw(spriteBatch);
-            }*/
+            }
         }
     }
 }

@@ -44,6 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Drawing\Grid.cs" />
+    <Compile Include="Game\LevelTextures.cs" />
     <Compile Include="Game\RoadPiece.cs" />
     <Compile Include="Screens\BaseScreen.cs" />
     <Compile Include="Drawing\Button.cs" />

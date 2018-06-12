@@ -65,6 +65,7 @@ namespace TowerDefenseGame
             MouseOffset.X = -4;
 
             GameState.Load();
+            LevelTextures.Load(Content);
             ScreenManager.Load(Content);
             NumberDrawer.Load(Content);
 
